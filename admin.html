@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Administrativo - HiTalent</title>
+    <style>
+        /* Estilos corporativos básicos */
+        body { font-family: sans-serif; background: #f4f7f6; padding: 20px; }
+        .tab-content { display: none; background: white; padding: 20px; border-radius: 8px; }
+        .active { display: block; }
+        nav { margin-bottom: 20px; }
+        button { padding: 10px 20px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    </style>
+</head>
+<body>
+
+    <h1>Dashboard HiTalent</h1>
+
+    <nav>
+        <button onclick="mostrar('requisiciones')">Requisiciones de Clientes</button>
+        <button onclick="mostrar('candidatos')">Candidatos / CVs</button>
+    </nav>
+
+    <div id="requisiciones" class="tab-content active">
+        <h2>Requisiciones Recibidas</h2>
+        <table>
+            <thead>
+                <tr><th>Empresa</th><th>Puesto</th><th>Ubicación</th><th>Detalles</th></tr>
+            </thead>
+            <tbody id="tabla-requisiciones">
+                </tbody>
+        </table>
+    </div>
+
+    <div id="candidatos" class="tab-content">
+        <h2>Base de Candidatos</h2>
+        <table>
+            <thead>
+                <tr><th>Nombre</th><th>Puesto</th><th>CV (Enlace)</th><th>Contacto</th></tr>
+            </thead>
+            <tbody id="tabla-candidatos">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        function mostrar(id) {
+            document.querySelectorAll('.tab-content').forEach(div => div.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        // Aquí irá la lógica para consultar a tu base de datos
+        // fetch('URL_DE_TU_BASE_DE_DATOS') ...
+    </script>
+</body>
+</html>
