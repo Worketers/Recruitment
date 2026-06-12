@@ -1,89 +1,179 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HiTalent - Requisición de Personal</title>
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,600,700' rel='stylesheet' type='text/css'>
     <style>
-        /* PALETA DE COLORES CORPORATIVA Y ESTILOS GENERALES */
+        /* PALETA MODO OSCURO / GLASSMORPHISM / ALTO BRILLO */
         :root {
-            --azul-marino: #0f2c59;
-            --azul-cobalto: #1d4ed8;
-            --gris-pizarra: #334155;
-            --gris-claro: #f8fafc;
-            --borde-gris: #cbd5e1;
-            --blanco: #ffffff;
+            --azul-neon: #3b82f6;
+            --azul-hover: #2563eb;
+            --texto-claro: #f8fafc;
+            --texto-mutado: #94a3b8;
+            --borde-glass: rgba(255, 255, 255, 0.15);
+            --fondo-glass: rgba(15, 23, 42, 0.7);
+            --fondo-input: rgba(255, 255, 255, 0.05);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Lato', sans-serif;
         }
 
         body {
-            background-color: var(--gris-claro);
-            color: var(--gris-pizarra);
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            color: var(--texto-claro);
             line-height: 1.6;
-            padding: 20px;
+            padding: 40px 20px;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
 
+        /* =========================================
+           EFECTO PARALLAX STARS (CSS PURO)
+           ========================================= */
+        #stars, #stars2, #stars3 {
+            position: fixed; /* Fixed para que las estrellas cubran todo el scroll */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+        }
+
+        #stars {
+            width: 1px;
+            height: 1px;
+            background: transparent;
+            box-shadow: 120px 30px #FFF, 450px 120px #FFF, 900px 40px #FFF, 1500px 300px #FFF, 180px 600px #FFF, 600px 800px #FFF, 1100px 900px #FFF, 1900px 1200px #FFF, 200px 1400px #FFF, 800px 1600px #FFF, 1400px 1800px #FFF, 1950px 1900px #FFF, 50px 1950px #FFF, 300px 100px #FFF, 750px 350px #FFF, 1300px 550px #FFF, 1750px 750px #FFF, 400px 1100px #FFF, 950px 1300px #FFF, 1600px 1500px #FFF;
+            animation: animStar 50s linear infinite;
+        }
+        #stars:after {
+            content: " ";
+            position: absolute;
+            top: 2000px;
+            width: 1px;
+            height: 1px;
+            background: transparent;
+            box-shadow: inherit;
+        }
+
+        #stars2 {
+            width: 2px;
+            height: 2px;
+            background: transparent;
+            box-shadow: 250px 80px #FFF, 850px 220px #FFF, 1400px 140px #FFF, 1900px 400px #FFF, 380px 700px #FFF, 900px 950px #FFF, 1500px 1050px #FFF, 100px 1300px #FFF, 600px 1500px #FFF, 1200px 1700px #FFF;
+            animation: animStar 100s linear infinite;
+        }
+        #stars2:after {
+            content: " ";
+            position: absolute;
+            top: 2000px;
+            width: 2px;
+            height: 2px;
+            background: transparent;
+            box-shadow: inherit;
+        }
+
+        #stars3 {
+            width: 3px;
+            height: 3px;
+            background: transparent;
+            box-shadow: 150px 200px #FFF, 750px 420px #FFF, 1200px 840px #FFF, 1800px 1100px #FFF, 480px 1400px #FFF, 1100px 1750px #FFF, 1600px 1950px #FFF;
+            animation: animStar 150s linear infinite;
+        }
+        #stars3:after {
+            content: " ";
+            position: absolute;
+            top: 2000px;
+            width: 3px;
+            height: 3px;
+            background: transparent;
+            box-shadow: inherit;
+        }
+
+        @keyframes animStar {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-2000px); }
+        }
+
+        /* =========================================
+           CONTENEDOR Y FORMULARIO (ESTILO INDUSTRIAL)
+           ========================================= */
         .container {
             max-width: 900px;
             margin: 0 auto;
-            background: var(--blanco);
+            background: var(--fondo-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            border: 1px solid var(--borde-glass);
+            border-top: 5px solid var(--azul-neon);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            position: relative;
+            z-index: 10;
         }
 
-        /* ENCABEZADO CORPORATIVO */
         .header {
             text-align: center;
-            border-bottom: 3px solid var(--azul-marino);
+            border-bottom: 1px solid var(--borde-glass);
             padding-bottom: 20px;
             margin-bottom: 30px;
         }
 
         .header h1 {
-            color: var(--azul-marino);
-            font-size: 24px;
+            color: #FFF;
+            font-size: 26px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            font-weight: 300;
+        }
+
+        .header h1 span {
+            color: var(--azul-neon);
+            font-weight: 700;
         }
 
         .header p {
             font-size: 13px;
-            color: #64748b;
-            font-weight: bold;
-        }
-
-        /* SECCIONES DEL FORMULARIO */
-        .section-title {
-            background-color: var(--azul-marino);
-            color: var(--blanco);
-            padding: 10px 15px;
-            font-size: 16px;
+            color: var(--texto-mutado);
             font-weight: 600;
-            text-transform: uppercase;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            border-radius: 4px;
+            letter-spacing: 0.5px;
         }
 
-        /* DISEÑO EN MALLA DE DOS O TRES COLUMNAS */
+        /* Títulos de sección con estilo panel técnico */
+        .section-title {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--azul-neon);
+            padding: 12px 15px;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border-left: 4px solid var(--azul-neon);
+        }
+
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 20px;
         }
 
         .grid-3 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
+            gap: 20px;
         }
 
         .form-group {
@@ -98,8 +188,9 @@
             display: block;
             font-size: 13px;
             font-weight: 600;
-            margin-bottom: 5px;
-            color: var(--azul-marino);
+            margin-bottom: 8px;
+            color: var(--texto-claro);
+            letter-spacing: 0.5px;
         }
 
         input[type="text"],
@@ -108,29 +199,41 @@
         textarea,
         select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid var(--borde-gris);
-            border-radius: 4px;
+            padding: 12px;
+            background-color: var(--fondo-input);
+            border: 1px solid var(--borde-glass);
+            border-radius: 6px;
             font-size: 14px;
-            color: var(--gris-pizarra);
-            transition: border-color 0.2s;
+            color: #FFF;
+            transition: all 0.3s ease;
+        }
+
+        select option {
+            background-color: #1e293b;
+            color: #FFF;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #64748b;
         }
 
         input:focus, textarea:focus, select:focus {
             outline: none;
-            border-color: var(--azul-cobalto);
+            border-color: var(--azul-neon);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         textarea {
             resize: vertical;
-            height: 80px;
+            height: 90px;
         }
 
-        /* ESTILOS DE CHECKBOXES Y RADIOS LÓGICOS */
+        /* ESTILOS DE CHECKBOXES Y RADIOS (Color de acento) */
         .checkbox-group, .radio-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 15px;
             padding: 8px 0;
         }
 
@@ -138,14 +241,17 @@
             display: flex;
             align-items: center;
             font-size: 14px;
+            color: var(--texto-claro);
             cursor: pointer;
+            user-select: none;
         }
 
         .checkbox-item input, .radio-item input {
             margin-right: 8px;
             width: 16px;
             height: 16px;
-            accent-color: var(--azul-marino);
+            accent-color: var(--azul-neon);
+            cursor: pointer;
         }
 
         /* BOTÓN DE ACCIÓN */
@@ -155,25 +261,31 @@
         }
 
         .btn-submit {
-            background-color: var(--azul-marino);
-            color: var(--blanco);
-            padding: 14px 30px;
+            background-color: var(--azul-neon);
+            color: #FFF;
+            padding: 15px 35px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 700;
+            letter-spacing: 1px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.3s ease;
             text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
 
         .btn-submit:hover {
-            background-color: #1e40af;
+            background-color: var(--azul-hover);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.6);
+            transform: translateY(-2px);
         }
 
         .btn-submit:disabled {
-            background-color: #94a3b8;
+            background-color: #475569;
+            box-shadow: none;
             cursor: not-allowed;
+            transform: translateY(0);
         }
 
         /* RESPONSIVO */
@@ -185,16 +297,20 @@
                 grid-column: span 1;
             }
             .container {
-                padding: 20px;
+                padding: 25px;
             }
         }
     </style>
 </head>
 <body>
 
+<div id="stars"></div>
+<div id="stars2"></div>
+<div id="stars3"></div>
+
 <div class="container">
     <div class="header">
-        <h1>Check List - Requisición de Personal</h1>
+        <h1>Check List <span>Requisición de Personal</span></h1>
         <p>(FAVOR DE MARCAR LAS CASILLAS RESPECTIVAS Y LLENAR EN SU TOTALIDAD LOS RECUADROS)</p>
     </div>
 
@@ -220,7 +336,7 @@
             </div>
             <div class="form-group">
                 <label for="emailContacto">E-mail / Contacto</label>
-                <input type="text" id="emailContacto" placeholder="Ej: correo@empresa.com">
+                <input type="email" id="emailContacto" placeholder="Ej: correo@empresa.com">
             </div>
             <div class="form-group">
                 <label for="nombrePosicion">Nombre de la Posición *</label>
@@ -310,7 +426,7 @@
         </div>
         <div class="form-group">
             <label for="habilidadesTecnologicas">Habilidades Tecnológicas</label>
-            <input type="text" id="habilitiesTecnologicas" placeholder="Ej: Paquetería Office, Software específico">
+            <input type="text" id="habilidadesTecnologicas" placeholder="Ej: Paquetería Office, Software específico">
         </div>
         <div class="form-group">
             <label for="idiomas">Idiomas</label>
@@ -418,6 +534,9 @@
 
     </form>
 </div>
+
+</body>
+</html>
 
 <script>
   // 1. ASIGNACIÓN DE LA WEB APP URL GENERADA EN APPS SCRIPT
