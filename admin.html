@@ -2,117 +2,124 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel Administrativo - HiTalent</title>
-    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <title>HiTalent | Panel de Control</title>
     <style>
         :root {
             --azul-neon: #3b82f6;
-            --azul-hover: #2563eb;
+            --fondo-glass: rgba(15, 23, 42, 0.85);
+            --borde-glass: rgba(255, 255, 255, 0.1);
             --texto-claro: #f8fafc;
-            --texto-mutado: #94a3b8;
-            --borde-glass: rgba(255, 255, 255, 0.15);
-            --fondo-glass: rgba(15, 23, 42, 0.7);
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Lato', sans-serif; }
-
-        body {
-            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-            color: var(--texto-claro);
-            padding: 40px 20px;
-            min-height: 100vh;
-        }
-
-        /* Estilos de fondo parallax (Iguales al formulario) */
-        #stars, #stars2, #stars3 { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
-        #stars { background: transparent; box-shadow: 100px 100px #FFF, 500px 300px #FFF; animation: animStar 50s linear infinite; }
-        @keyframes animStar { from { transform: translateY(0px); } to { transform: translateY(-2000px); } }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: var(--fondo-glass);
-            backdrop-filter: blur(12px);
-            padding: 40px;
-            border-radius: 12px;
-            border: 1px solid var(--borde-glass);
-            position: relative;
-            z-index: 10;
-        }
-
-        h1 { margin-bottom: 30px; font-weight: 300; letter-spacing: 2px; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #090A0F; color: var(--texto-claro); padding: 20px; margin: 0; }
         
-        /* Navegación de pestañas */
-        nav { display: flex; gap: 10px; margin-bottom: 30px; }
-        button {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--borde-glass);
-            color: var(--texto-claro);
-            padding: 12px 25px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-        }
-        button:hover, button.active-tab { background: var(--azul-neon); border-color: var(--azul-neon); }
+        .container { max-width: 1200px; margin: auto; background: var(--fondo-glass); backdrop-filter: blur(10px); padding: 30px; border-radius: 12px; border: 1px solid var(--borde-glass); }
+        
+        /* Controles */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .tabs { display: flex; gap: 10px; }
+        button { background: rgba(255,255,255,0.1); border: 1px solid var(--borde-glass); color: white; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+        button:hover, .active-tab { background: var(--azul-neon); }
 
-        /* Contenido de pestañas */
+        /* Tablas */
         .tab-content { display: none; }
         .active { display: block; }
-
-        /* Tabla industrial */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: rgba(0,0,0,0.2); border-radius: 8px; overflow: hidden; }
-        th { background: rgba(59, 130, 246, 0.2); padding: 15px; text-align: left; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; color: var(--azul-neon); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: rgba(0,0,0,0.3); }
+        th { text-align: left; padding: 15px; color: var(--azul-neon); text-transform: uppercase; font-size: 11px; }
         td { padding: 15px; border-bottom: 1px solid var(--borde-glass); font-size: 14px; }
-        tr:hover { background: rgba(255,255,255,0.05); }
-
+        
+        /* Modal (Mejora Crítica) */
+        .modal { display: none; position: fixed; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center; }
+        .modal-content { background: #1e293b; padding: 30px; border-radius: 10px; max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto; }
+        .close-btn { float: right; cursor: pointer; font-size: 24px; }
     </style>
 </head>
 <body>
 
-    <div id="stars"></div>
-    <div id="stars2"></div>
-    <div id="stars3"></div>
-
-    <div class="container">
-        <h1>Dashboard <span style="color:var(--azul-neon)">HiTalent</span></h1>
-
-        <nav>
-            <button class="active-tab" onclick="mostrar(event, 'requisiciones')">Requisiciones</button>
-            <button onclick="mostrar(event, 'candidatos')">Candidatos</button>
-        </nav>
-
-        <div id="requisiciones" class="tab-content active">
-            <h2>Requisiciones Recibidas</h2>
-            <table>
-                <thead><tr><th>Empresa</th><th>Puesto</th><th>Ubicación</th><th>Detalles</th></tr></thead>
-                <tbody id="tabla-requisiciones">
-                    <tr><td>Ejemplo S.A.</td><td>Desarrollador</td><td>Monterrey</td><td><button style="padding:5px 10px;">Ver</button></td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div id="candidatos" class="tab-content">
-            <h2>Base de Candidatos</h2>
-            <table>
-                <thead><tr><th>Nombre</th><th>Puesto</th><th>CV</th><th>Contacto</th></tr></thead>
-                <tbody id="tabla-candidatos">
-                    <tr><td>Juan Pérez</td><td>IT Engineer</td><td>[PDF]</td><td>juan@email.com</td></tr>
-                </tbody>
-            </table>
+<div class="container">
+    <div class="header">
+        <h1>HiTalent Admin</h1>
+        <div class="tabs">
+            <button class="active-tab" onclick="cambiarVista('req', this)">Requisiciones</button>
+            <button onclick="cambiarVista('cand', this)">Candidatos</button>
+            <button onclick="cargarDatos()" style="background: green;">Actualizar</button>
         </div>
     </div>
 
-    <script>
-        function mostrar(event, id) {
-            // Ocultar todos
-            document.querySelectorAll('.tab-content').forEach(div => div.classList.remove('active'));
-            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active-tab'));
+    <div id="div-req" class="tab-content active">
+        <table id="tabla-req">
+            <thead><tr><th>Empresa</th><th>Puesto</th><th>Estatus</th><th>Acciones</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="div-cand" class="tab-content">
+        <table id="tabla-cand">
+            <thead><tr><th>Nombre</th><th>Puesto</th><th>Estatus</th><th>Acciones</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="cerrarModal()">&times;</span>
+        <h2>Detalles</h2>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbybqu3o-oT1uOHSfCHDAES2L_-FgZil48c8f7ZKjJ7LC3VjFEnww8WPWtsQhWDIAN8_/exec"; // REEMPLAZA ESTO
+
+    // Cambio de vista
+    function cambiarVista(id, btn) {
+        document.querySelectorAll('.tab-content').forEach(d => d.classList.remove('active'));
+        document.querySelectorAll('button').forEach(b => b.classList.remove('active-tab'));
+        document.getElementById('div-' + id).classList.add('active');
+        btn.classList.add('active-tab');
+    }
+
+    // Cargar datos (Ejemplo: Supongamos que tu backend devuelve un objeto {requisiciones: [], candidatos: []})
+    async function cargarDatos() {
+        try {
+            const res = await fetch(API_URL);
+            const data = await res.json();
             
-            // Mostrar seleccionado
-            document.getElementById(id).classList.add('active');
-            event.currentTarget.classList.add('active-tab');
-        }
-    </script>
+            // Renderizar Requisiciones
+            const tbodyReq = document.querySelector('#tabla-req tbody');
+            tbodyReq.innerHTML = data.requisiciones.map(item => `
+                <tr>
+                    <td>${item.EMPRESA_CLIENTE}</td>
+                    <td>${item.NOMBRE_POSICION}</td>
+                    <td>${item.ESTATUS}</td>
+                    <td><button onclick='verDetalle(${JSON.stringify(item)})'>Ver Todo</button></td>
+                </tr>
+            `).join('');
+
+            // Renderizar Candidatos
+            const tbodyCand = document.querySelector('#tabla-cand tbody');
+            tbodyCand.innerHTML = data.candidatos.map(item => `
+                <tr>
+                    <td>${item.NOMBRE_CANDIDATO}</td>
+                    <td>${item.PUESTO}</td>
+                    <td>${item.ESTATUS_PROCESO}</td>
+                    <td><button onclick='verDetalle(${JSON.stringify(item)})'>Ver Todo</button></td>
+                </tr>
+            `).join('');
+        } catch(e) { alert("Error al cargar, revisa tu API_URL"); }
+    }
+
+    function verDetalle(obj) {
+        const modal = document.getElementById('modal');
+        const body = document.getElementById('modal-body');
+        body.innerHTML = Object.entries(obj).map(([key, val]) => 
+            `<p><strong>${key}:</strong> ${val}</p>`
+        ).join('');
+        modal.style.display = 'flex';
+    }
+
+    function cerrarModal() { document.getElementById('modal').style.display = 'none'; }
+</script>
 </body>
 </html>
