@@ -6,9 +6,10 @@
     <style>
         :root {
             --azul-neon: #3b82f6;
-            --fondo-glass: rgba(15, 23, 42, 0.85);
+            --fondo-glass: rgba(15, 23, 42, 0.95);
             --borde-glass: rgba(255, 255, 255, 0.1);
             --texto-claro: #f8fafc;
+            --bg-seccion: rgba(255, 255, 255, 0.05);
         }
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: #090A0F; color: var(--texto-claro); padding: 20px; margin: 0; }
@@ -18,20 +19,33 @@
         /* Controles */
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .tabs { display: flex; gap: 10px; }
-        button { background: rgba(255,255,255,0.1); border: 1px solid var(--borde-glass); color: white; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
-        button:hover, .active-tab { background: var(--azul-neon); }
+        button { background: rgba(255,255,255,0.1); border: 1px solid var(--borde-glass); color: white; padding: 10px 20px; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+        button:hover, .active-tab { background: var(--azul-neon); box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
 
         /* Tablas */
         .tab-content { display: none; }
-        .active { display: block; }
+        .active { display: block; animation: fadeIn 0.5s; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; background: rgba(0,0,0,0.3); }
-        th { text-align: left; padding: 15px; color: var(--azul-neon); text-transform: uppercase; font-size: 11px; }
+        th { text-align: left; padding: 15px; color: var(--azul-neon); text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
         td { padding: 15px; border-bottom: 1px solid var(--borde-glass); font-size: 14px; }
         
-        /* Modal (Mejora Crítica) */
-        .modal { display: none; position: fixed; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center; }
-        .modal-content { background: #1e293b; padding: 30px; border-radius: 10px; max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto; }
-        .close-btn { float: right; cursor: pointer; font-size: 24px; }
+        /* Modal de Tarjeta Detallada */
+        .modal { display: none; position: fixed; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; }
+        .modal-content { background: #111827; padding: 0; border-radius: 12px; max-width: 900px; width: 95%; max-height: 90vh; overflow-y: auto; border: 1px solid var(--azul-neon); }
+        .modal-header { position: sticky; top: 0; background: #1e293b; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--azul-neon); }
+        .modal-body { padding: 25px; }
+        .close-btn { cursor: pointer; font-size: 28px; line-height: 1; }
+
+        /* Bloques de la Tarjeta */
+        .seccion-card { background: var(--bg-seccion); border-radius: 8px; padding: 20px; margin-bottom: 20px; border-left: 4px solid var(--azul-neon); }
+        .seccion-titulo { color: var(--azul-neon); font-size: 12px; font-weight: bold; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1.5px; border-bottom: 1px solid rgba(59, 130, 246, 0.2); padding-bottom: 5px; }
+        
+        .grid-datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .dato-item { display: flex; flex-direction: column; }
+        .label { font-size: 11px; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; }
+        .valor { font-size: 14px; color: white; line-height: 1.4; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -42,7 +56,7 @@
         <div class="tabs">
             <button class="active-tab" onclick="cambiarVista('req', this)">Requisiciones</button>
             <button onclick="cambiarVista('cand', this)">Candidatos</button>
-            <button onclick="cargarDatos()" style="background: green;">Actualizar</button>
+            <button onclick="cargarDatos()" style="background: #059669;">Actualizar</button>
         </div>
     </div>
 
@@ -61,65 +75,152 @@
     </div>
 </div>
 
+<!-- Modal Mejorado -->
 <div id="modal" class="modal">
     <div class="modal-content">
-        <span class="close-btn" onclick="cerrarModal()">&times;</span>
-        <h2>Detalles</h2>
-        <div id="modal-body"></div>
+        <div class="modal-header">
+            <h2 id="modal-titulo" style="margin:0; font-size: 18px;">Detalle de Requisición</h2>
+            <span class="close-btn" onclick="cerrarModal()">&times;</span>
+        </div>
+        <div id="modal-body" class="modal-body"></div>
     </div>
 </div>
 
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbybqu3o-oT1uOHSfCHDAES2L_-FgZil48c8f7ZKjJ7LC3VjFEnww8WPWtsQhWDIAN8_/exec"; // REEMPLAZA ESTO
+    const API_URL = "https://script.google.com/macros/s/AKfycbybqu3o-oT1uOHSfCHDAES2L_-FgZil48c8f7ZKjJ7LC3VjFEnww8WPWtsQhWDIAN8_/exec";
 
-    // Cambio de vista
     function cambiarVista(id, btn) {
         document.querySelectorAll('.tab-content').forEach(d => d.classList.remove('active'));
-        document.querySelectorAll('button').forEach(b => b.classList.remove('active-tab'));
+        document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active-tab'));
         document.getElementById('div-' + id).classList.add('active');
         btn.classList.add('active-tab');
     }
 
-    // Cargar datos (Ejemplo: Supongamos que tu backend devuelve un objeto {requisiciones: [], candidatos: []})
     async function cargarDatos() {
         try {
             const res = await fetch(API_URL);
             const data = await res.json();
             
-            // Renderizar Requisiciones
             const tbodyReq = document.querySelector('#tabla-req tbody');
             tbodyReq.innerHTML = data.requisiciones.map(item => `
                 <tr>
                     <td>${item.EMPRESA_CLIENTE}</td>
                     <td>${item.NOMBRE_POSICION}</td>
                     <td>${item.ESTATUS}</td>
-                    <td><button onclick='verDetalle(${JSON.stringify(item)})'>Ver Todo</button></td>
+                    <td><button onclick='verDetalleReq(${JSON.stringify(item)})'>Ver Ficha</button></td>
                 </tr>
             `).join('');
 
-            // Renderizar Candidatos
             const tbodyCand = document.querySelector('#tabla-cand tbody');
             tbodyCand.innerHTML = data.candidatos.map(item => `
                 <tr>
                     <td>${item.NOMBRE_CANDIDATO}</td>
-                    <td>${item.PUESTO}</td>
+                    <td>${item.ID_REQUISICION}</td>
                     <td>${item.ESTATUS_PROCESO}</td>
-                    <td><button onclick='verDetalle(${JSON.stringify(item)})'>Ver Todo</button></td>
+                    <td><button onclick='verDetalleCand(${JSON.stringify(item)})'>Ver Ficha</button></td>
                 </tr>
             `).join('');
-        } catch(e) { alert("Error al cargar, revisa tu API_URL"); }
+        } catch(e) { console.error(e); }
     }
 
-    function verDetalle(obj) {
-        const modal = document.getElementById('modal');
+    // Renderizado por bloques para Requisiciones
+    function verDetalleReq(d) {
         const body = document.getElementById('modal-body');
-        body.innerHTML = Object.entries(obj).map(([key, val]) => 
-            `<p><strong>${key}:</strong> ${val}</p>`
-        ).join('');
-        modal.style.display = 'flex';
+        document.getElementById('modal-titulo').innerText = `Requisición: ${d.NOMBRE_POSICION}`;
+        
+        body.innerHTML = `
+            <div class="seccion-card">
+                <div class="seccion-titulo">1. Generales</div>
+                <div class="grid-datos">
+                    <div class="dato-item"><span class="label">Solicitante</span><span class="valor">${d.NOMBRE_SOLICITANTE}</span></div>
+                    <div class="dato-item"><span class="label">Empresa</span><span class="valor">${d.EMPRESA_CLIENTE}</span></div>
+                    <div class="dato-item"><span class="label">Contacto</span><span class="valor">Tel: ${d.TELEFONO_CONTACTO} / Cel: ${d.CELULAR_CONTACTO}</span></div>
+                    <div class="dato-item"><span class="label">Email</span><span class="valor">${d.EMAIL_CONTACTO}</span></div>
+                    <div class="dato-item"><span class="label">Vacantes</span><span class="valor">${d.NUMERO_VACANTES} (${d.TIPO_VACANTE})</span></div>
+                    <div class="dato-item"><span class="label">Ubicación</span><span class="valor">${d.UBICACION}</span></div>
+                    <div class="dato-item"><span class="label">Horario</span><span class="valor">${d.HORARIO_LABORAL}</span></div>
+                    <div class="dato-item"><span class="label">Reporta a</span><span class="valor">${d.REPORTA_A}</span></div>
+                </div>
+            </div>
+
+            <div class="seccion-card">
+                <div class="seccion-titulo">2. Información del Perfil</div>
+                <div class="grid-datos">
+                    <div class="dato-item"><span class="label">Edad y Edo. Civil</span><span class="valor">${d.EDAD_MIN_MAX} / ${d.ESTADO_CIVIL}</span></div>
+                    <div class="dato-item"><span class="label">Género</span><span class="valor">${d.GENERO}</span></div>
+                    <div class="dato-item"><span class="label">Escolaridad</span><span class="valor">${d.ESCOLARIDAD}</span></div>
+                </div>
+                <div style="margin-top:15px">
+                    <span class="label">Objetivo del Puesto</span><p class="valor">${d.OBJETIVO_PUESTO}</p>
+                    <span class="label">Experiencia e Indispensables</span><p class="valor">${d.EXPERIENCIA_REQUERIDA}<br>${d.REQUISITOS_INDISPENSABLES}</p>
+                    <span class="label">Habilidades Tecnológicas</span><p class="valor">${d.HABILIDADES_TECNOLOGICAS}</p>
+                </div>
+            </div>
+
+            <div class="seccion-card">
+                <div class="seccion-titulo">3. Verificación / Actividades</div>
+                <div class="grid-datos">
+                    <div class="dato-item"><span class="label">Competencias</span><span class="valor">${d.COMPETENCIAS_EVALUAR}</span></div>
+                </div>
+                <div style="margin-top:15px">
+                    <span class="label">Actividades a Desempeñar</span><p class="valor">${d.ACTIVIDADES_DESEMPENAR}</p>
+                </div>
+            </div>
+
+            <div class="seccion-card">
+                <div class="seccion-titulo">4. Sueldos y Prestaciones</div>
+                <div class="grid-datos">
+                    <div class="dato-item"><span class="label">Sueldo Bruto/Neto</span><span class="valor">B: ${d.SUELDO_BRUTO} / N: ${d.SUELDO_NETO}</span></div>
+                    <div class="dato-item"><span class="label">Esquema / Frecuencia</span><span class="valor">${d.ESQUEMA_PAGO} / ${d.FRECUENCIA_PAGO}</span></div>
+                    <div class="dato-item"><span class="label">Prestaciones</span><span class="valor">${d.PRESTACIONES_LEY}<br>${d.PRESTACIONES_SUPERIORES}</span></div>
+                </div>
+            </div>
+
+            <div class="seccion-card">
+                <div class="seccion-titulo">5. Tipo de Contrato</div>
+                <div class="grid-datos">
+                    <div class="dato-item"><span class="label">Contratación</span><span class="valor">${d.TIPO_CONTRATO}</span></div>
+                    <div class="dato-item"><span class="label">Periodo de Prueba</span><span class="valor">${d.PERIODO_PRUEBA}</span></div>
+                </div>
+            </div>
+
+            <div class="seccion-card">
+                <div class="seccion-titulo">6. Auto / Transporte</div>
+                <div class="valor">${d.REQUISITOS_AUTO_TRANSPORTE}</div>
+            </div>
+
+            <div class="seccion-card">
+                <div class="seccion-titulo">7. Observaciones Extras</div>
+                <div class="valor" style="white-space: pre-wrap;">${d.OBSERVACIONES_EXTRAS}</div>
+            </div>
+        `;
+        document.getElementById('modal').style.display = 'flex';
+    }
+
+    // Vista simplificada para Candidatos
+    function verDetalleCand(c) {
+        const body = document.getElementById('modal-body');
+        document.getElementById('modal-titulo').innerText = `Candidato: ${c.NOMBRE_CANDIDATO}`;
+        body.innerHTML = `
+            <div class="seccion-card">
+                <div class="seccion-titulo">Datos del Postulante</div>
+                <div class="grid-datos">
+                    <div class="dato-item"><span class="label">Teléfono</span><span class="valor">${c.TELEFONO}</span></div>
+                    <div class="dato-item"><span class="label">Correo</span><span class="valor">${c.CORREO}</span></div>
+                    <div class="dato-item"><span class="label">Estatus</span><span class="valor">${c.ESTATUS_PROCESO}</span></div>
+                    <div class="dato-item"><span class="label">CV</span><span class="valor"><a href="${c.LINK_CV}" target="_blank" style="color:var(--azul-neon)">Abrir Currículum</a></span></div>
+                </div>
+            </div>
+            <div class="seccion-card">
+                <div class="seccion-titulo">Notas del Reclutador</div>
+                <div class="valor">${c.NOTAS_RECLUTADOR || 'Sin notas'}</div>
+            </div>
+        `;
+        document.getElementById('modal').style.display = 'flex';
     }
 
     function cerrarModal() { document.getElementById('modal').style.display = 'none'; }
+    window.onload = cargarDatos;
 </script>
 </body>
 </html>
