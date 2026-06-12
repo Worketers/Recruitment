@@ -4,43 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HiTalent - Únete a nuestro equipo</title>
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
     <style>
-        /* PALETA CORPORATIVA HITALENT */
+        /* PALETA HITALENT - ADAPTADA A MODO OSCURO/GLASS */
         :root {
-            --azul-marino: #0f2c59;
-            --azul-cobalto: #1d4ed8;
-            --gris-pizarra: #334155;
-            --gris-claro: #f8fafc;
-            --borde-gris: #cbd5e1;
-            --blanco: #ffffff;
+            --azul-neon: #3b82f6;
+            --azul-hover: #2563eb;
+            --texto-claro: #f8fafc;
+            --texto-mutado: #94a3b8;
+            --borde-glass: rgba(255, 255, 255, 0.15);
+            --fondo-glass: rgba(15, 23, 42, 0.6);
+            --fondo-input: rgba(255, 255, 255, 0.05);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Lato', sans-serif;
         }
 
         body {
-            background-color: var(--gris-claro);
-            color: var(--gris-pizarra);
+            /* Fondo Radial Original del Parallax */
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            color: var(--texto-claro);
             line-height: 1.6;
             padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
 
+        /* =========================================
+           EFECTO PARALLAX STARS (CSS PURO)
+           ========================================= */
+        #stars, #stars2, #stars3 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+        }
+
+        /* Generación estática de sombras para simular la función SCSS */
+        #stars {
+            width: 1px;
+            height: 1px;
+            background: transparent;
+            box-shadow: 120px 30px #FFF, 450px 120px #FFF, 900px 40px #FFF, 1500px 300px #FFF, 180px 600px #FFF, 600px 800px #FFF, 1100px 900px #FFF, 1900px 1200px #FFF, 200px 1400px #FFF, 800px 1600px #FFF, 1400px 1800px #FFF, 1950px 1900px #FFF, 50px 1950px #FFF, 300px 100px #FFF, 750px 350px #FFF, 1300px 550px #FFF, 1750px 750px #FFF, 400px 1100px #FFF, 950px 1300px #FFF, 1600px 1500px #FFF;
+            animation: animStar 50s linear infinite;
+        }
+        #stars:after {
+            content: " ";
+            position: absolute;
+            top: 2000px;
+            width: 1px;
+            height: 1px;
+            background: transparent;
+            box-shadow: inherit;
+        }
+
+        #stars2 {
+            width: 2px;
+            height: 2px;
+            background: transparent;
+            box-shadow: 250px 80px #FFF, 850px 220px #FFF, 1400px 140px #FFF, 1900px 400px #FFF, 380px 700px #FFF, 900px 950px #FFF, 1500px 1050px #FFF, 100px 1300px #FFF, 600px 1500px #FFF, 1200px 1700px #FFF;
+            animation: animStar 100s linear infinite;
+        }
+        #stars2:after {
+            content: " ";
+            position: absolute;
+            top: 2000px;
+            width: 2px;
+            height: 2px;
+            background: transparent;
+            box-shadow: inherit;
+        }
+
+        #stars3 {
+            width: 3px;
+            height: 3px;
+            background: transparent;
+            box-shadow: 150px 200px #FFF, 750px 420px #FFF, 1200px 840px #FFF, 1800px 1100px #FFF, 480px 1400px #FFF, 1100px 1750px #FFF, 1600px 1950px #FFF;
+            animation: animStar 150s linear infinite;
+        }
+        #stars3:after {
+            content: " ";
+            position: absolute;
+            top: 2000px;
+            width: 3px;
+            height: 3px;
+            background: transparent;
+            box-shadow: inherit;
+        }
+
+        @keyframes animStar {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-2000px); }
+        }
+
+        /* =========================================
+           ESTILOS DEL FORMULARIO (GLASSMORPHISM)
+           ========================================= */
         .container {
             width: 100%;
             max-width: 600px;
-            background: var(--blanco);
+            background: var(--fondo-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            border-top: 5px solid var(--azul-marino);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--borde-glass);
+            border-top: 5px solid var(--azul-neon);
+            position: relative;
+            z-index: 10; /* Asegura que esté sobre las estrellas */
         }
 
         .header {
@@ -49,15 +131,23 @@
         }
 
         .header h1 {
-            color: var(--azul-marino);
-            font-size: 24px;
+            color: #FFF;
+            font-weight: 300;
+            font-size: 28px;
+            letter-spacing: 2px;
             text-transform: uppercase;
             margin-bottom: 10px;
         }
 
+        .header h1 span {
+            font-weight: 700;
+            color: var(--azul-neon);
+        }
+
         .header p {
-            font-size: 14px;
-            color: #64748b;
+            font-size: 15px;
+            color: var(--texto-mutado);
+            font-weight: 300;
         }
 
         .form-group {
@@ -69,7 +159,8 @@
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 8px;
-            color: var(--azul-marino);
+            color: var(--texto-claro);
+            letter-spacing: 0.5px;
         }
 
         input[type="text"],
@@ -78,75 +169,99 @@
         select {
             width: 100%;
             padding: 12px;
-            border: 1px solid var(--borde-gris);
-            border-radius: 4px;
+            background-color: var(--fondo-input);
+            border: 1px solid var(--borde-glass);
+            color: #FFF;
+            border-radius: 6px;
             font-size: 14px;
-            transition: border-color 0.2s;
+            transition: all 0.3s ease;
+        }
+
+        /* Estilo para las opciones del select en modo oscuro */
+        select option {
+            background-color: #1e293b;
+            color: #FFF;
+        }
+
+        input::placeholder {
+            color: #64748b;
         }
 
         input:focus, select:focus {
             outline: none;
-            border-color: var(--azul-cobalto);
+            border-color: var(--azul-neon);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         /* ESTILO PARA EL INPUT DEL ARCHIVO (CV) */
         .file-upload-wrapper {
-            border: 2px dashed var(--borde-gris);
+            border: 2px dashed var(--borde-glass);
             padding: 20px;
             text-align: center;
-            border-radius: 4px;
-            background-color: var(--gris-claro);
+            border-radius: 6px;
+            background-color: var(--fondo-input);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
         }
 
         .file-upload-wrapper:hover {
-            border-color: var(--azul-cobalto);
-            background-color: #eff6ff;
+            border-color: var(--azul-neon);
+            background-color: rgba(59, 130, 246, 0.1);
         }
 
         input[type="file"] {
-            display: none; /* Ocultamos el botón feo por defecto */
+            display: none;
         }
 
         .file-name-display {
             display: block;
             margin-top: 10px;
-            font-size: 13px;
-            color: var(--azul-cobalto);
+            font-size: 14px;
+            color: var(--azul-neon);
             font-weight: bold;
         }
 
         .btn-submit {
             width: 100%;
-            background-color: var(--azul-cobalto);
-            color: var(--blanco);
+            background-color: var(--azul-neon);
+            color: #FFF;
             padding: 15px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 700;
+            letter-spacing: 1px;
             cursor: pointer;
             text-transform: uppercase;
             margin-top: 20px;
-            transition: background-color 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
 
         .btn-submit:hover {
-            background-color: #1e40af;
+            background-color: var(--azul-hover);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.6);
+            transform: translateY(-2px);
         }
 
         .btn-submit:disabled {
-            background-color: #94a3b8;
+            background-color: #475569;
+            box-shadow: none;
             cursor: not-allowed;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
 
+<div id="stars"></div>
+<div id="stars2"></div>
+<div id="stars3"></div>
+
 <div class="container">
     <div class="header">
-        <h1>Bolsa de Trabajo - HiTalent</h1>
+        <h1>Bolsa de Trabajo <span>HiTalent</span></h1>
         <p>Completa tu perfil y adjunta tu currículum para conectar con las mejores oportunidades laborales.</p>
     </div>
 
@@ -185,7 +300,6 @@
             </select>
         </div>
 
-        <!-- ZONA DE CARGA DE ARCHIVO (CV) -->
         <div class="form-group">
             <label>Sube tu Currículum Vitae (PDF o Word) *</label>
             <div class="file-upload-wrapper" onclick="document.getElementById('cvArchivo').click()">
@@ -201,7 +315,7 @@
 </div>
 
 <script>
-    // Mostrar el nombre del archivo seleccionado para que el candidato sepa que sí se cargó
+    // Mostrar el nombre del archivo seleccionado
     function mostrarNombreArchivo() {
         const input = document.getElementById('cvArchivo');
         const display = document.getElementById('nombreArchivoVisible');
@@ -219,12 +333,10 @@
 
         const archivoInput = document.getElementById('cvArchivo').files[0];
         
-        // Magia para convertir el archivo a texto (Base64) y poder mandarlo a nuestra base de datos
         const reader = new FileReader();
         reader.readAsDataURL(archivoInput);
         
         reader.onload = function() {
-            // Se quita el prefijo extra del base64
             const base64Archivo = reader.result.split(',')[1]; 
 
             const payload = {
@@ -235,13 +347,11 @@
                 estudios: document.getElementById('nivelEstudios').value,
                 nombreArchivo: archivoInput.name,
                 tipoMime: archivoInput.type,
-                datosArchivo: base64Archivo // El archivo convertido en texto
+                datosArchivo: base64Archivo 
             };
 
-            // Aquí se enviará el 'payload' a la URL de conexión de nuestra base de datos
             console.log("Datos listos para enviar a la BD:", payload);
             
-            // Simulamos el tiempo de envío
             setTimeout(() => {
                 alert("¡Perfil y CV enviados con éxito! Nos pondremos en contacto contigo pronto.");
                 document.getElementById('formCandidato').reset();
