@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HiTalent - Únete a nuestro equipo</title>
+    <style>
+        /* PALETA CORPORATIVA HITALENT */
+        :root {
+            --azul-marino: #0f2c59;
+            --azul-cobalto: #1d4ed8;
+            --gris-pizarra: #334155;
+            --gris-claro: #f8fafc;
+            --borde-gris: #cbd5e1;
+            --blanco: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--gris-claro);
+            color: var(--gris-pizarra);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--blanco);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid var(--azul-marino);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--azul-marino);
+            font-size: 24px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--azul-marino);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--borde-gris);
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--azul-cobalto);
+        }
+
+        /* ESTILO PARA EL INPUT DEL ARCHIVO (CV) */
+        .file-upload-wrapper {
+            border: 2px dashed var(--borde-gris);
+            padding: 20px;
+            text-align: center;
+            border-radius: 4px;
+            background-color: var(--gris-claro);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .file-upload-wrapper:hover {
+            border-color: var(--azul-cobalto);
+            background-color: #eff6ff;
+        }
+
+        input[type="file"] {
+            display: none; /* Ocultamos el botón feo por defecto */
+        }
+
+        .file-name-display {
+            display: block;
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--azul-cobalto);
+            font-weight: bold;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--azul-cobalto);
+            color: var(--blanco);
+            padding: 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: #1e40af;
+        }
+
+        .btn-submit:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Bolsa de Trabajo - HiTalent</h1>
+        <p>Completa tu perfil y adjunta tu currículum para conectar con las mejores oportunidades laborales.</p>
+    </div>
+
+    <form id="formCandidato">
+        
+        <div class="form-group">
+            <label for="nombreCompleto">Nombre Completo *</label>
+            <input type="text" id="nombreCompleto" required placeholder="Ej: Juan Pérez García">
+        </div>
+
+        <div class="form-group">
+            <label for="telefono">Teléfono Celular *</label>
+            <input type="tel" id="telefono" required placeholder="Ej: 81 0000 0000">
+        </div>
+
+        <div class="form-group">
+            <label for="correo">Correo Electrónico *</label>
+            <input type="email" id="correo" required placeholder="Ej: juan@correo.com">
+        </div>
+
+        <div class="form-group">
+            <label for="puestoDeseado">Puesto o Área de Interés *</label>
+            <input type="text" id="puestoDeseado" required placeholder="Ej: Contador, Ingeniero Industrial, Ventas...">
+        </div>
+
+        <div class="form-group">
+            <label for="nivelEstudios">Nivel de Estudios *</label>
+            <select id="nivelEstudios" required>
+                <option value="" disabled selected>Selecciona una opción</option>
+                <option value="Secundaria">Secundaria</option>
+                <option value="Preparatoria">Preparatoria / Bachillerato</option>
+                <option value="Carrera Técnica">Carrera Técnica</option>
+                <option value="Universidad Trunca">Universidad Trunca</option>
+                <option value="Universidad Terminada">Universidad Terminada</option>
+                <option value="Posgrado">Maestría / Posgrado</option>
+            </select>
+        </div>
+
+        <!-- ZONA DE CARGA DE ARCHIVO (CV) -->
+        <div class="form-group">
+            <label>Sube tu Currículum Vitae (PDF o Word) *</label>
+            <div class="file-upload-wrapper" onclick="document.getElementById('cvArchivo').click()">
+                <span> Haz clic aquí para seleccionar tu CV 📄</span>
+                <input type="file" id="cvArchivo" accept=".pdf, .doc, .docx" required onchange="mostrarNombreArchivo()">
+                <span id="nombreArchivoVisible" class="file-name-display"></span>
+            </div>
+        </div>
+
+        <button type="submit" id="btnEnviar" class="btn-submit">Enviar mi Perfil</button>
+
+    </form>
+</div>
+
+<script>
+    // Mostrar el nombre del archivo seleccionado para que el candidato sepa que sí se cargó
+    function mostrarNombreArchivo() {
+        const input = document.getElementById('cvArchivo');
+        const display = document.getElementById('nombreArchivoVisible');
+        if (input.files.length > 0) {
+            display.textContent = "Archivo listo: " + input.files[0].name;
+        }
+    }
+
+    document.getElementById('formCandidato').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const boton = document.getElementById('btnEnviar');
+        boton.innerText = "Procesando...";
+        boton.disabled = true;
+
+        const archivoInput = document.getElementById('cvArchivo').files[0];
+        
+        // Magia para convertir el archivo a texto (Base64) y poder mandarlo a nuestra base de datos
+        const reader = new FileReader();
+        reader.readAsDataURL(archivoInput);
+        
+        reader.onload = function() {
+            // Se quita el prefijo extra del base64
+            const base64Archivo = reader.result.split(',')[1]; 
+
+            const payload = {
+                nombre: document.getElementById('nombreCompleto').value,
+                telefono: document.getElementById('telefono').value,
+                correo: document.getElementById('correo').value,
+                puesto: document.getElementById('puestoDeseado').value,
+                estudios: document.getElementById('nivelEstudios').value,
+                nombreArchivo: archivoInput.name,
+                tipoMime: archivoInput.type,
+                datosArchivo: base64Archivo // El archivo convertido en texto
+            };
+
+            // Aquí se enviará el 'payload' a la URL de conexión de nuestra base de datos
+            console.log("Datos listos para enviar a la BD:", payload);
+            
+            // Simulamos el tiempo de envío
+            setTimeout(() => {
+                alert("¡Perfil y CV enviados con éxito! Nos pondremos en contacto contigo pronto.");
+                document.getElementById('formCandidato').reset();
+                document.getElementById('nombreArchivoVisible').textContent = "";
+                boton.innerText = "Enviar mi Perfil";
+                boton.disabled = false;
+            }, 1500);
+        };
+
+        reader.onerror = function(error) {
+            console.log('Error al leer el archivo: ', error);
+            alert("Hubo un problema al procesar tu CV. Intenta de nuevo.");
+            boton.innerText = "Enviar mi Perfil";
+            boton.disabled = false;
+        };
+    });
+</script>
+
+</body>
+</html>
