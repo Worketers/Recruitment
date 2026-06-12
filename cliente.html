@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HiTalent - Requisición de Personal</title>
+    <style>
+        /* PALETA DE COLORES CORPORATIVA Y ESTILOS GENERALES */
+        :root {
+            --azul-marino: #0f2c59;
+            --azul-cobalto: #1d4ed8;
+            --gris-pizarra: #334155;
+            --gris-claro: #f8fafc;
+            --borde-gris: #cbd5e1;
+            --blanco: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--gris-claro);
+            color: var(--gris-pizarra);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--blanco);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* ENCABEZADO CORPORATIVO */
+        .header {
+            text-align: center;
+            border-bottom: 3px solid var(--azul-marino);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--azul-marino);
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: bold;
+        }
+
+        /* SECCIONES DEL FORMULARIO */
+        .section-title {
+            background-color: var(--azul-marino);
+            color: var(--blanco);
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        /* DISEÑO EN MALLA DE DOS O TRES COLUMNAS */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--azul-marino);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--borde-gris);
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--gris-pizarra);
+            transition: border-color 0.2s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--azul-cobalto);
+        }
+
+        textarea {
+            resize: vertical;
+            height: 80px;
+        }
+
+        /* ESTILOS DE CHECKBOXES Y RADIOS LÓGICOS */
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .checkbox-item, .radio-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .checkbox-item input, .radio-item input {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            accent-color: var(--azul-marino);
+        }
+
+        /* BOTÓN DE ACCIÓN */
+        .btn-container {
+            margin-top: 40px;
+            text-align: right;
+        }
+
+        .btn-submit {
+            background-color: var(--azul-marino);
+            color: var(--blanco);
+            padding: 14px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-transform: uppercase;
+        }
+
+        .btn-submit:hover {
+            background-color: #1e40af;
+        }
+
+        .btn-submit:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        /* RESPONSIVO */
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Check List - Requisición de Personal</h1>
+        <p>(FAVOR DE MARCAR LAS CASILLAS RESPECTIVAS Y LLENAR EN SU TOTALIDAD LOS RECUADROS)</p>
+    </div>
+
+    <form id="formRequisicion">
+        
+        <div class="section-title">1. Generales</div>
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="nombreSolicitante">Nombre del Solicitante *</label>
+                <input type="text" id="nombreSolicitante" required placeholder="Ej: Nombre Apellido">
+            </div>
+            <div class="form-group">
+                <label for="empresaCliente">Empresa *</label>
+                <input type="text" id="empresaCliente" required placeholder="Ej: Empresa S.A. de C.V.">
+            </div>
+            <div class="form-group">
+                <label for="telefonoContacto">Teléfono Fijo</label>
+                <input type="text" id="telefonoContacto" placeholder="Ej: 0000000000">
+            </div>
+            <div class="form-group">
+                <label for="celularContacto">Celular</label>
+                <input type="text" id="celularContacto" placeholder="Ej: 0000000000">
+            </div>
+            <div class="form-group">
+                <label for="emailContacto">E-mail / Contacto</label>
+                <input type="text" id="emailContacto" placeholder="Ej: correo@empresa.com">
+            </div>
+            <div class="form-group">
+                <label for="nombrePosicion">Nombre de la Posición *</label>
+                <input type="text" id="nombrePosicion" required placeholder="Ej: Puesto Solicitado">
+            </div>
+            <div class="form-group">
+                <label for="numeroVacantes">No. de Vacantes</label>
+                <input type="number" id="numeroVacantes" min="1" value="1">
+            </div>
+            <div class="form-group">
+                <label>Sobre Vacante</label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="tipoVacante" value="Nueva creación" checked> Nueva creación</label>
+                    <label class="radio-item"><input type="radio" name="tipoVacante" value="Reemplazo"> Reemplazo</label>
+                    <label class="radio-item"><input type="radio" name="tipoVacante" value="Interinato"> Interinato</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ubicacion">Ubicación</label>
+                <input type="text" id="ubicacion" placeholder="Ej: Ciudad, Estado">
+            </div>
+            <div class="form-group">
+                <label for="horarioLaboral">Horario</label>
+                <input type="text" id="horarioLaboral" placeholder="Ej: L-V 9:00 A 18:00 HRS">
+            </div>
+            <div class="form-group full-width">
+                <label for="reportaA">Reporta a</label>
+                <input type="text" id="reportaA" placeholder="Ej: Título del Jefe Directo">
+            </div>
+        </div>
+
+        <div class="section-title">2. Información del Perfil</div>
+        <div class="grid-3">
+            <div class="form-group">
+                <label for="edadMinMax">Edad Sugerida</label>
+                <input type="text" id="edadMinMax" placeholder="Ej: Rango de edad">
+            </div>
+            <div class="form-group">
+                <label for="estadoCivil">Estado Civil</label>
+                <select id="estadoCivil">
+                    <option value="INDISTINTO">Indistinto</option>
+                    <option value="SOLTERO/A">Soltero/a</option>
+                    <option value="CASADO/A">Casado/a</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Género</label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="genero" value="Masculino"> Masc.</label>
+                    <label class="radio-item"><input type="radio" name="genero" value="Femenino"> Fem.</label>
+                    <label class="radio-item"><input type="radio" name="genero" value="Indistinto" checked> Indist.</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Escolaridad</label>
+            <div class="checkbox-group">
+                <label class="checkbox-item"><input type="checkbox" name="escolaridad" value="Prepa"> Prepa</label>
+                <label class="checkbox-item"><input type="checkbox" name="escolaridad" value="C. técnica"> C. técnica</label>
+                <label class="checkbox-item"><input type="checkbox" name="escolaridad" value="C. trunca"> C. trunca</label>
+                <label class="checkbox-item"><input type="checkbox" name="escolaridad" value="C. terminada"> C. terminada</label>
+                <label class="checkbox-item"><input type="checkbox" name="escolaridad" value="C. título y cédula"> C. título y cédula</label>
+                <label class="checkbox-item"><input type="checkbox" name="escolaridad" value="Otro"> Otro</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="objetivoPuesto">Objetivo del Puesto</label>
+            <textarea id="objetivoPuesto" placeholder="Escribe el objetivo principal..."></textarea>
+        </div>
+        <div class="form-group">
+            <label for="experienciaRequerida">Experiencia Requerida</label>
+            <input type="text" id="experienciaRequerida" placeholder="Ej: Tiempo y áreas de experiencia">
+        </div>
+        <div class="form-group">
+            <label for="requisitosIndispensables">Requisitos Indispensables</label>
+            <textarea id="requisitosIndispensables" placeholder="Manejo de sistemas, certificaciones, etc..."></textarea>
+        </div>
+        <div class="form-group">
+            <label for="requisitosDeseables">Requisitos Deseables</label>
+            <textarea id="requisitosDeseables" placeholder="Conocimientos adicionales..."></textarea>
+        </div>
+        <div class="form-group">
+            <label for="conocimientosCualidades">Conocimientos y Cualidades Blandas</label>
+            <textarea id="conocimientosCualidades" placeholder="Habilidades blandas, aptitudes, etc..."></textarea>
+        </div>
+        <div class="form-group">
+            <label for="habilidadesTecnologicas">Habilidades Tecnológicas</label>
+            <input type="text" id="habilitiesTecnologicas" placeholder="Ej: Paquetería Office, Software específico">
+        </div>
+        <div class="form-group">
+            <label for="idiomas">Idiomas</label>
+            <input type="text" id="idiomas" placeholder="Ej: Nivel de idioma requerido o N/A">
+        </div>
+
+        <div class="section-title">3. Verificación en la Entrevista / Psicometría</div>
+        <div class="form-group">
+            <label>Habilidades y Capacidades a Evaluar</label>
+            <div class="checkbox-group">
+                <label class="checkbox-item"><input type="checkbox" name="competencias" value="Pensamiento crítico"> Pensamiento crítico</label>
+                <label class="checkbox-item"><input type="checkbox" name="competencias" value="Proactividad"> Proactividad</label>
+                <label class="checkbox-item"><input type="checkbox" name="competencias" value="Resol. de problemas"> Resol. de problemas</label>
+                <label class="checkbox-item"><input type="checkbox" name="competencias" value="Creatividad"> Creatividad</label>
+                <label class="checkbox-item"><input type="checkbox" name="competencias" value="Toma de decisiones"> Toma de decisiones</label>
+                <label class="checkbox-item"><input type="checkbox" name="competencias" value="Comunicación"> Comunicación</label>
+                <label class="checkbox-item"><input type="checkbox" name="competencias" value="Trabajo en equipo"> Trabajo en equipo</label>
+                <label class="checkbox-item"><input type="checkbox" name="competencias" value="Motivación y orientación al cambio"> Motivación</label>
+                <label class="checkbox-item"><input type="checkbox" name="competencias" value="Trabajo bajo presión"> Trabajo bajo presión</label>
+                <label class="checkbox-item"><input type="checkbox" name="competencias" value="Liderazgo"> Liderazgo</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="actividadesDesempenar">Actividades a Desempeñar</label>
+            <textarea id="actividadesDesempenar" placeholder="• Actividad 1&#10;• Actividad 2&#10;• Actividad 3..."></textarea>
+        </div>
+
+        <div class="section-title">4. Sueldos y Prestaciones</div>
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="sueldoBruto">Sueldo Mensual Bruto</label>
+                <input type="text" id="sueldoBruto" placeholder="Rango bruto">
+            </div>
+            <div class="form-group">
+                <label for="sueldoNeto">Sueldo Mensual Neto (Base)</label>
+                <input type="text" id="sueldoNeto" placeholder="Rango neto">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Prestaciones y Compensaciones</label>
+            <div class="checkbox-group">
+                <label class="checkbox-item"><input type="checkbox" id="prestacionesLey" value="Sí"> Prestaciones de Ley</label>
+                <label class="checkbox-item"><input type="checkbox" name="compensaciones" value="Comp. variables"> Comp. variables</label>
+                <label class="checkbox-item"><input type="checkbox" name="compensaciones" value="Bonos/Comisiones"> Bonos / Comisiones</label>
+                <label class="checkbox-item"><input type="checkbox" name="compensaciones" value="Propinas"> Propinas</label>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="prestacionesSuperiores">Prestaciones por Encima de la Ley</label>
+                <input type="text" id="prestacionesSuperiores" placeholder="Ej: Fondo de ahorro, seguro de gastos médicos...">
+            </div>
+            <div class="form-group">
+                <label>Esquema de Contratación</label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="esquemaPago" value="Nominal" checked> Nominal</label>
+                    <label class="radio-item"><input type="radio" name="esquemaPago" value="Honorarios"> Honorarios</label>
+                    <label class="radio-item"><input type="radio" name="esquemaPago" value="Mixto"> Mixto</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Frecuencia de Pago</label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="frecuenciaPago" value="Pago quincenal" checked> Quincenal</label>
+                    <label class="radio-item"><input type="radio" name="frecuenciaPago" value="Pago semanal"> Semanal</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Tipo de Contrato</label>
+                <select id="tipoContrato">
+                    <option value="Tiempo indeterminado">Tiempo indeterminado</option>
+                    <option value="Tiempo determinado">Tiempo determinado</option>
+                    <option value="Temporal - evento">Temporal - evento</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="periodoPrueba">Período de Prueba</label>
+                <input type="text" id="periodoPrueba" placeholder="Ej: Plazo de prueba">
+            </div>
+        </div>
+
+        <div class="section-title">5. Transporte y Observaciones</div>
+        <div class="form-group">
+            <label>Requisitos de Auto / Transporte</label>
+            <div class="checkbox-group">
+                <label class="checkbox-item"><input type="checkbox" name="transporte" value="Requisito saber manejar"> Requisito saber manejar</label>
+                <label class="checkbox-item"><input type="checkbox" name="transporte" value="Contar con auto propio"> Contar con auto propio</label>
+                <label class="checkbox-item"><input type="checkbox" name="transporte" value="Apoyo transporte"> Apoyo transporte</label>
+                <label class="checkbox-item"><input type="checkbox" name="transporte" value="Licencia manejo"> Licencia manejo</label>
+                <label class="checkbox-item"><input type="checkbox" name="transporte" value="Licencia de chofer"> Licencia de chofer</label>
+                <label class="checkbox-item"><input type="checkbox" name="transporte" value="Moto propia"> Moto propia</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="observacionesExtras">Observaciones Extras</label>
+            <textarea id="observacionesExtras" style="height: 120px;" placeholder="Beneficios extra, comentarios de cultura laboral..."></textarea>
+        </div>
+
+        <div class="btn-container">
+            <button type="submit" id="btnGuardar" class="btn-submit">Guardar Requisición</button>
+        </div>
+
+    </form>
+</div>
+
+<script>
+  // 1. ASIGNACIÓN DE LA WEB APP URL GENERADA EN APPS SCRIPT
+  const API_URL = "https://script.google.com/macros/s/AKfycbybqu3o-oT1uOHSfCHDAES2L_-FgZil48c8f7ZKjJ7LC3VjFEnww8WPWtsQhWDIAN8_/exec";
+
+  document.getElementById('formRequisicion').addEventListener('submit', function(e) {
+      e.preventDefault(); // Detener recarga de pantalla nativa
+      
+      const boton = document.getElementById('btnGuardar');
+      boton.innerText = "Guardando...";
+      boton.disabled = true;
+
+      // 2. RECOPILACIÓN Y MAPEO DINÁMICO DE INPUTS MULTI-SELECCIÓN (ARRAY A TEXTO)
+      const escolaridades = Array.from(document.querySelectorAll('input[name="escolaridad"]:checked')).map(el => el.value).join(', ');
+      const competencias = Array.from(document.querySelectorAll('input[name="competencias"]:checked')).map(el => el.value).join(', ');
+      const compensaciones = Array.from(document.querySelectorAll('input[name="compensaciones"]:checked')).map(el => el.value).join(', ');
+      const transporte = Array.from(document.querySelectorAll('input[name="transporte"]:checked')).map(el => el.value).join(', ');
+
+      // 3. CONSTRUCCIÓN DEL OBJETO JSON DE ENVÍO
+      const payload = {
+          nombreSolicitante: document.getElementById('nombreSolicitante').value,
+          empresaCliente: document.getElementById('empresaCliente').value,
+          telefonoContacto: document.getElementById('telefonoContacto').value,
+          celularContacto: document.getElementById('celularContacto').value,
+          emailContacto: document.getElementById('emailContacto').value,
+          nombrePosicion: document.getElementById('nombrePosicion').value,
+          numeroVacantes: document.getElementById('numeroVacantes').value,
+          tipoVacante: document.querySelector('input[name="tipoVacante"]:checked').value,
+          ubicacion: document.getElementById('ubicacion').value,
+          horarioLaboral: document.getElementById('horarioLaboral').value,
+          reportaA: document.getElementById('reportaA').value,
+          edadMinMax: document.getElementById('edadMinMax').value,
+          estadoCivil: document.getElementById('estadoCivil').value,
+          genero: document.querySelector('input[name="genero"]:checked').value,
+          escolaridad: escolaridades,
+          objetivoPuesto: document.getElementById('objetivoPuesto').value,
+          experienciaRequerida: document.getElementById('experienciaRequerida').value,
+          requisitosIndispensables: document.getElementById('requisitosIndispensables').value,
+          requisitosDeseables: document.getElementById('requisitosDeseables').value,
+          conocimientosCualidades: document.getElementById('conocimientosCualidades').value,
+          habilidadesTecnologicas: document.getElementById('habilitiesTecnologicas').value,
+          idiomas: document.getElementById('idiomas').value,
+          competenciasEvaluar: competencias,
+          actividadesDesempenar: document.getElementById('actividadesDesempenar').value,
+          sueldoBruto: document.getElementById('sueldoBruto').value,
+          sueldoNeto: document.getElementById('sueldoNeto').value,
+          prestacionesLey: document.getElementById('prestacionesLey').checked ? "Sí" : "No",
+          prestacionesSuperiores: document.getElementById('prestacionesSuperiores').value,
+          compensacionesVariables: compensaciones,
+          esquemaPago: document.querySelector('input[name="esquemaPago"]:checked').value,
+          frecuenciaPago: document.querySelector('input[name="frecuenciaPago"]:checked').value,
+          tipoContrato: document.getElementById('tipoContrato').value,
+          periodoPrueba: document.getElementById('periodoPrueba').value,
+          requisitosAutoTransporte: transporte,
+          observacionesExtras: document.getElementById('observacionesExtras').value
+      };
+
+      // 4. DISPARO DE PETICIÓN ASÍNCRONA (FETCH POST) A NUESTRO BACKEND DESACOPLADO
+      fetch(API_URL, {
+          method: 'POST',
+          mode: 'no-cors', // Evita bloqueos de origen cruzado en envíos directos
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+      })
+      .then(() => {
+          alert("¡Gracias, tu peticion fue guardada con exito!");
+          document.getElementById('formRequisicion').reset();
+          boton.innerText = "Guardar Requisición";
+          boton.disabled = false;
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert("Ocurrió un error al intentar enviar los datos.");
+          boton.innerText = "Guardar Requisición";
+          boton.disabled = false;
+      });
+  });
+</script>
+
+</body>
+</html>
