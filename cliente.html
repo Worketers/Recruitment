@@ -7,173 +7,87 @@
     <title>HiTalent - Requisición de Personal</title>
     <link href='https://fonts.googleapis.com/css?family=Lato:300,400,600,700' rel='stylesheet' type='text/css'>
     <style>
-        /* PALETA MODO OSCURO / GLASSMORPHISM / ALTO BRILLO */
+        /* PALETA DE COLORES CORPORATIVA - MODO CLARO REFINADO */
         :root {
-            --azul-neon: #3b82f6;
-            --azul-hover: #2563eb;
-            --texto-claro: #f8fafc;
-            --texto-mutado: #94a3b8;
-            --borde-glass: rgba(255, 255, 255, 0.15);
-            --fondo-glass: rgba(15, 23, 42, 0.7);
-            --fondo-input: rgba(255, 255, 255, 0.05);
+            --azul-marino: #0f2c59;
+            --azul-cobalto: #1d4ed8;
+            --azul-fondo-suave: #f0f4f8; /* Nuevo fondo claro para secciones */
+            --gris-pizarra: #334155;
+            --gris-claro: #f8fafc;
+            --borde-gris: #cbd5e1;
+            --blanco: #ffffff;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Lato', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-            color: var(--texto-claro);
+            background-color: var(--gris-claro);
+            color: var(--gris-pizarra);
             line-height: 1.6;
-            padding: 40px 20px;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
+            padding: 20px;
         }
 
-        /* =========================================
-           EFECTO PARALLAX STARS (CSS PURO)
-           ========================================= */
-        #stars, #stars2, #stars3 {
-            position: fixed; /* Fixed para que las estrellas cubran todo el scroll */
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 0;
-        }
-
-        #stars {
-            width: 1px;
-            height: 1px;
-            background: transparent;
-            box-shadow: 120px 30px #FFF, 450px 120px #FFF, 900px 40px #FFF, 1500px 300px #FFF, 180px 600px #FFF, 600px 800px #FFF, 1100px 900px #FFF, 1900px 1200px #FFF, 200px 1400px #FFF, 800px 1600px #FFF, 1400px 1800px #FFF, 1950px 1900px #FFF, 50px 1950px #FFF, 300px 100px #FFF, 750px 350px #FFF, 1300px 550px #FFF, 1750px 750px #FFF, 400px 1100px #FFF, 950px 1300px #FFF, 1600px 1500px #FFF;
-            animation: animStar 50s linear infinite;
-        }
-        #stars:after {
-            content: " ";
-            position: absolute;
-            top: 2000px;
-            width: 1px;
-            height: 1px;
-            background: transparent;
-            box-shadow: inherit;
-        }
-
-        #stars2 {
-            width: 2px;
-            height: 2px;
-            background: transparent;
-            box-shadow: 250px 80px #FFF, 850px 220px #FFF, 1400px 140px #FFF, 1900px 400px #FFF, 380px 700px #FFF, 900px 950px #FFF, 1500px 1050px #FFF, 100px 1300px #FFF, 600px 1500px #FFF, 1200px 1700px #FFF;
-            animation: animStar 100s linear infinite;
-        }
-        #stars2:after {
-            content: " ";
-            position: absolute;
-            top: 2000px;
-            width: 2px;
-            height: 2px;
-            background: transparent;
-            box-shadow: inherit;
-        }
-
-        #stars3 {
-            width: 3px;
-            height: 3px;
-            background: transparent;
-            box-shadow: 150px 200px #FFF, 750px 420px #FFF, 1200px 840px #FFF, 1800px 1100px #FFF, 480px 1400px #FFF, 1100px 1750px #FFF, 1600px 1950px #FFF;
-            animation: animStar 150s linear infinite;
-        }
-        #stars3:after {
-            content: " ";
-            position: absolute;
-            top: 2000px;
-            width: 3px;
-            height: 3px;
-            background: transparent;
-            box-shadow: inherit;
-        }
-
-        @keyframes animStar {
-            from { transform: translateY(0px); }
-            to { transform: translateY(-2000px); }
-        }
-
-        /* =========================================
-           CONTENEDOR Y FORMULARIO (ESTILO INDUSTRIAL)
-           ========================================= */
         .container {
             max-width: 900px;
             margin: 0 auto;
-            background: var(--fondo-glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: var(--blanco);
             padding: 40px;
-            border-radius: 12px;
-            border: 1px solid var(--borde-glass);
-            border-top: 5px solid var(--azul-neon);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            position: relative;
-            z-index: 10;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); /* Sombra más sutil */
         }
 
+        /* ENCABEZADO CORPORATIVO MODO CLARO */
         .header {
             text-align: center;
-            border-bottom: 1px solid var(--borde-glass);
+            border-bottom: 2px solid var(--borde-gris); /* Borde más suave */
             padding-bottom: 20px;
             margin-bottom: 30px;
         }
 
         .header h1 {
-            color: #FFF;
-            font-size: 26px;
+            color: var(--azul-marino);
+            font-size: 24px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-            font-weight: 300;
-        }
-
-        .header h1 span {
-            color: var(--azul-neon);
-            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
         }
 
         .header p {
             font-size: 13px;
-            color: var(--texto-mutado);
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            color: #64748b;
+            font-weight: bold;
         }
 
-        /* Títulos de sección con estilo panel técnico */
+        /* SECCIONES TRANSFORMARES A MODO CLARO */
         .section-title {
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--azul-neon);
-            padding: 12px 15px;
-            font-size: 15px;
+            background-color: var(--azul-fondo-suave); /* Fondo claro en lugar de oscuro */
+            color: var(--azul-marino); /* Texto oscuro para contraste */
+            border-left: 5px solid var(--azul-marino); /* Línea de acento elegante */
+            padding: 10px 15px;
+            font-size: 16px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 35px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-            border-left: 4px solid var(--azul-neon);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-radius: 0 4px 4px 0;
         }
 
+        /* DISEÑO EN MALLA DE DOS O TRES COLUMNAS */
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 15px;
         }
 
         .grid-3 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
+            gap: 15px;
         }
 
         .form-group {
@@ -188,9 +102,8 @@
             display: block;
             font-size: 13px;
             font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--texto-claro);
-            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+            color: var(--azul-marino);
         }
 
         input[type="text"],
@@ -199,41 +112,31 @@
         textarea,
         select {
             width: 100%;
-            padding: 12px;
-            background-color: var(--fondo-input);
-            border: 1px solid var(--borde-glass);
-            border-radius: 6px;
+            padding: 10px;
+            border: 1px solid var(--borde-gris);
+            border-radius: 4px;
             font-size: 14px;
-            color: #FFF;
-            transition: all 0.3s ease;
-        }
-
-        select option {
-            background-color: #1e293b;
-            color: #FFF;
-        }
-
-        input::placeholder, textarea::placeholder {
-            color: #64748b;
+            color: var(--gris-pizarra);
+            background-color: var(--blanco);
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         input:focus, textarea:focus, select:focus {
             outline: none;
-            border-color: var(--azul-neon);
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
-            background-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--azul-cobalto);
+            box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1); /* Efecto de enfoque moderno */
         }
 
         textarea {
             resize: vertical;
-            height: 90px;
+            height: 80px;
         }
 
-        /* ESTILOS DE CHECKBOXES Y RADIOS (Color de acento) */
+        /* ESTILOS DE CHECKBOXES Y RADIOS */
         .checkbox-group, .radio-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 12px;
             padding: 8px 0;
         }
 
@@ -241,51 +144,55 @@
             display: flex;
             align-items: center;
             font-size: 14px;
-            color: var(--texto-claro);
             cursor: pointer;
-            user-select: none;
+            padding: 6px 12px;
+            background-color: var(--gris-claro); /* Pequeño contenedor claro para cada opción */
+            border: 1px solid var(--borde-gris);
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .checkbox-item:hover, .radio-item:hover {
+            background-color: #f1f5f9;
         }
 
         .checkbox-item input, .radio-item input {
             margin-right: 8px;
             width: 16px;
             height: 16px;
-            accent-color: var(--azul-neon);
-            cursor: pointer;
+            accent-color: var(--azul-marino);
         }
 
-        /* BOTÓN DE ACCIÓN */
+        /* BOTÓN DE ACCIÓN ACCESIBLE */
         .btn-container {
             margin-top: 40px;
             text-align: right;
         }
 
         .btn-submit {
-            background-color: var(--azul-neon);
-            color: #FFF;
-            padding: 15px 35px;
+            background-color: var(--azul-marino);
+            color: var(--blanco);
+            padding: 14px 30px;
             border: none;
-            border-radius: 6px;
+            border-radius: 4px;
             font-size: 16px;
-            font-weight: 700;
-            letter-spacing: 1px;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background-color 0.2s, transform 0.1s;
             text-transform: uppercase;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
 
         .btn-submit:hover {
-            background-color: var(--azul-hover);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.6);
-            transform: translateY(-2px);
+            background-color: #1e40af;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
         }
 
         .btn-submit:disabled {
-            background-color: #475569;
-            box-shadow: none;
+            background-color: #94a3b8;
             cursor: not-allowed;
-            transform: translateY(0);
         }
 
         /* RESPONSIVO */
@@ -297,25 +204,20 @@
                 grid-column: span 1;
             }
             .container {
-                padding: 25px;
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
 
-<div id="stars"></div>
-<div id="stars2"></div>
-<div id="stars3"></div>
-
 <div class="container">
     <div class="header">
-        <h1>Check List <span>Requisición de Personal</span></h1>
+        <h1>Check List - Requisición de Personal</h1>
         <p>(FAVOR DE MARCAR LAS CASILLAS RESPECTIVAS Y LLENAR EN SU TOTALIDAD LOS RECUADROS)</p>
     </div>
 
-    <form id="formRequisicion">
-        
+    <form id="formRequisicion">        
         <div class="section-title">1. Generales</div>
         <div class="grid-2">
             <div class="form-group">
