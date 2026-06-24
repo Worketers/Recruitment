@@ -9,39 +9,23 @@
            ========================================================= */
 
         :root {
-            /* Paleta de Colores Worketers */
-            --color-primario: #0096a3;       /* rgb(0, 150, 163) */
-            --color-primario-hover: #2ac2b5; /* rgb(42, 194, 181) */
-            --color-primario-dark: #26857d;  /* rgb(38, 133, 125) */
-            
-            /* Grises y Fondos (Modo Claro) */
+            --color-primario: #0096a3;       
+            --color-primario-hover: #2ac2b5; 
+            --color-primario-dark: #26857d;  
             --fondo-pantalla: #f8fafc;
             --fondo-contenedor: #ffffff;
-            --fondo-seccion: #eef8f8;        /* Turquesa extra claro para secciones */
+            --fondo-seccion: #eef8f8;        
             --texto-principal: #334155;
             --texto-etiquetas: #1e293b;
             --borde-suave: #e2e8f0;
             --color-exito: #10b981;
         }
 
-        /* Reseteo y Tipografía Global */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--fondo-pantalla); color: var(--texto-principal); line-height: 1.6; padding: 20px; }
 
-        body {
-            background-color: var(--fondo-pantalla);
-            color: var(--texto-principal);
-            line-height: 1.6;
-            padding: 20px;
-        }
-
-        /* Contenedor Principal (Tarjeta Limpia) */
         .container {
-            max-width: 1300px; /* Ampliado para que las tablas de datos tengan espacio */
+            max-width: 1400px;
             margin: 0 auto;
             background: var(--fondo-contenedor);
             padding: 40px;
@@ -50,257 +34,95 @@
             border: 1px solid var(--borde-suave);
         }
 
-        /* Encabezados de Página */
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--borde-suave);
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--borde-suave); padding-bottom: 20px; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;
         }
 
-        .header-title h1 {
-            color: var(--color-primario);
-            font-size: 24px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-        }
+        .header-title h1 { color: var(--color-primario); font-size: 24px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .header-title p { font-size: 13px; color: #64748b; font-weight: 600; }
 
-        .header-title p {
-            font-size: 13px;
-            color: #64748b;
-            font-weight: 600;
-        }
-
-        /* Controles de búsqueda y filtros */
-        .search-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            width: 100%;
-        }
+        .search-container { display: flex; gap: 10px; margin-bottom: 20px; width: 100%; }
         
-        /* Entradas de Texto Integradas */
         .search-input, select, textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--borde-suave);
-            border-radius: 6px;
-            font-size: 14px;
-            color: var(--texto-principal);
-            background-color: var(--fondo-contenedor);
-            transition: all 0.2s ease;
-            outline: none;
+            width: 100%; padding: 10px 12px; border: 1px solid var(--borde-suave); border-radius: 6px;
+            font-size: 14px; color: var(--texto-principal); background-color: var(--fondo-contenedor); transition: all 0.2s ease; outline: none;
         }
-        
-        .search-input::placeholder, textarea::placeholder { color: #94a3b8; }
         
         .search-input:focus, select:focus, textarea:focus {
-            border-color: var(--color-primario);
-            box-shadow: 0 0 0 4px rgba(0, 150, 163, 0.1);
-            background-color: var(--fondo-contenedor);
+            border-color: var(--color-primario); box-shadow: 0 0 0 4px rgba(0, 150, 163, 0.1); background-color: var(--fondo-contenedor);
         }
 
-        /* TABS de Navegación */
         .tabs { display: flex; gap: 10px; }
         .tab-btn {
-            background-color: var(--fondo-contenedor);
-            border: 1px solid var(--borde-suave);
-            color: var(--texto-principal);
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 600;
-            font-size: 14px;
+            background-color: var(--fondo-contenedor); border: 1px solid var(--borde-suave); color: var(--texto-principal);
+            padding: 10px 20px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; font-weight: 600; font-size: 14px;
         }
+        .tab-btn:hover { background-color: var(--fondo-seccion); border-color: var(--color-primario-hover); }
+        .tab-btn.active-tab { background-color: var(--color-primario); color: var(--fondo-contenedor); border-color: var(--color-primario); box-shadow: 0 4px 6px rgba(0, 150, 163, 0.2); }
         
-        .tab-btn:hover {
-            background-color: var(--fondo-seccion);
-            border-color: var(--color-primario-hover);
-        }
-        
-        .tab-btn.active-tab {
-            background-color: var(--color-primario);
-            color: var(--fondo-contenedor);
-            border-color: var(--color-primario);
-            box-shadow: 0 4px 6px rgba(0, 150, 163, 0.2);
-        }
-
-        .btn-actualizar {
-            background-color: var(--fondo-seccion);
-            color: var(--color-primario-dark);
-            border-color: var(--color-primario-hover);
-        }
-        
-        .btn-actualizar:hover {
-            background-color: var(--color-primario-dark);
-            color: white;
-        }
+        .btn-actualizar { background-color: var(--fondo-seccion); color: var(--color-primario-dark); border-color: var(--color-primario-hover); }
+        .btn-actualizar:hover { background-color: var(--color-primario-dark); color: white; }
 
         .tab-content { display: none; }
         .active { display: block; animation: fadeIn 0.3s; }
 
-        /* TABLAS DE DATOS */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--fondo-contenedor);
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--borde-suave);
-        }
-        
+        table { width: 100%; border-collapse: collapse; background: var(--fondo-contenedor); border-radius: 8px; overflow: hidden; border: 1px solid var(--borde-suave); }
         th {
-            text-align: left;
-            padding: 12px 15px;
-            color: var(--color-primario-dark);
-            text-transform: uppercase;
-            font-size: 11px;
-            font-weight: 700;
-            background-color: var(--fondo-seccion);
-            border-bottom: 2px solid var(--borde-suave);
+            text-align: left; padding: 12px 15px; color: var(--color-primario-dark); text-transform: uppercase;
+            font-size: 11px; font-weight: 700; background-color: var(--fondo-seccion); border-bottom: 2px solid var(--borde-suave);
         }
+        td { padding: 12px 15px; border-bottom: 1px solid var(--borde-suave); font-size: 13px; }
         
-        td { padding: 12px 15px; border-bottom: 1px solid var(--borde-suave); font-size: 14px; }
-        tr:hover { background-color: var(--fondo-seccion); }
+        /* Efecto hover e indicador de clic en fila */
+        tr.fila-datos:hover { background-color: var(--fondo-seccion); cursor: pointer; }
 
-        /* Badges de Estado adaptados a Worketers */
-        .badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            text-transform: uppercase;
-            display: inline-block;
-        }
-        .badge-activa { background-color: #ccfbf1; color: #0f766e; } /* Tonos Teal */
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; display: inline-block; }
+        .badge-activa { background-color: #ccfbf1; color: #0f766e; } 
         .badge-pendiente { background-color: #fef9c3; color: #854d0e; }
         .badge-proceso { background-color: #e0f2fe; color: #0369a1; }
         .badge-cerrada { background-color: #f1f5f9; color: #475569; }
 
-        /* Títulos de Sección (Modales) */
         .section-title {
-            background-color: var(--fondo-seccion);
-            color: var(--color-primario-dark);
-            border-left: 4px solid var(--color-primario);
-            padding: 10px 15px;
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-top: 20px;
-            margin-bottom: 15px;
-            border-radius: 0 6px 6px 0;
+            background-color: var(--fondo-seccion); color: var(--color-primario-dark); border-left: 4px solid var(--color-primario);
+            padding: 10px 15px; font-size: 14px; font-weight: 700; text-transform: uppercase; margin-top: 20px; margin-bottom: 15px; border-radius: 0 6px 6px 0;
         }
 
-        /* Botón de Acción Principal de Worketers */
         .btn-principal {
-            background-color: var(--color-primario);
-            color: var(--fondo-contenedor);
-            padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 6px rgba(0, 150, 163, 0.2);
+            background-color: var(--color-primario); color: var(--fondo-contenedor); padding: 8px 16px; border: none; border-radius: 6px;
+            font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; box-shadow: 0 4px 6px rgba(0, 150, 163, 0.2);
         }
+        .btn-principal:hover { background-color: var(--color-primario-hover); box-shadow: 0 6px 8px rgba(0, 150, 163, 0.3); transform: translateY(-1px); }
 
-        .btn-principal:hover {
-            background-color: var(--color-primario-hover);
-            box-shadow: 0 6px 8px rgba(0, 150, 163, 0.3);
-            transform: translateY(-1px);
-        }
-
-        .btn-principal:active {
-            transform: scale(0.98);
-            box-shadow: 0 2px 4px rgba(0, 150, 163, 0.2);
-        }
-
-        /* Modales Interactivos */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); z-index: 100; justify-content: center; align-items: center;
         }
-        
         .modal-content {
-            background: var(--fondo-contenedor);
-            border-radius: 12px;
-            max-width: 900px;
-            width: 95%;
-            max-height: 85vh;
-            overflow-y: auto;
-            border: 1px solid var(--borde-suave);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            background: var(--fondo-contenedor); border-radius: 12px; max-width: 1000px; width: 95%; max-height: 85vh;
+            overflow-y: auto; border: 1px solid var(--borde-suave); box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
-        
         .modal-header {
-            position: sticky; top: 0; background: var(--fondo-contenedor);
-            padding: 15px 25px; display: flex; justify-content: space-between;
+            position: sticky; top: 0; background: var(--fondo-contenedor); padding: 15px 25px; display: flex; justify-content: space-between;
             align-items: center; border-bottom: 1px solid var(--borde-suave); z-index: 10;
         }
-        
         .modal-header h2 { color: var(--color-primario); font-size: 18px; text-transform: uppercase;}
         .modal-body { padding: 20px 25px; }
-        
         .close-btn { cursor: pointer; font-size: 24px; color: #94a3b8; transition: color 0.2s; }
         .close-btn:hover { color: var(--color-primario-dark); }
 
-        /* Cuadrículas de datos dentro del modal */
         .grid-datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px; }
         .dato-item { display: flex; flex-direction: column; }
-        
-        .label {
-            display: block;
-            font-size: 11px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--texto-etiquetas);
-            text-transform: uppercase;
-        }
-        
-        .valor {
-            font-size: 13px;
-            color: var(--texto-principal);
-            background-color: var(--fondo-pantalla);
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: 1px solid var(--borde-suave);
-        }
-
-        textarea { resize: vertical; min-height: 80px; }
+        .label { display: block; font-size: 11px; font-weight: 600; margin-bottom: 6px; color: var(--texto-etiquetas); text-transform: uppercase; }
+        .valor { font-size: 13px; color: var(--texto-principal); background-color: var(--fondo-pantalla); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--borde-suave); }
 
         .btn-guardar {
-            background-color: var(--color-primario-dark);
-            color: white; padding: 10px 20px;
-            border: none; border-radius: 6px; font-size: 13px; font-weight: bold;
-            cursor: pointer; text-transform: uppercase; margin-top: 15px; float: right;
-            box-shadow: 0 4px 6px rgba(38, 133, 125, 0.2);
-            transition: all 0.2s ease;
+            background-color: var(--color-primario-dark); color: white; padding: 10px 20px; border: none; border-radius: 6px; font-size: 13px;
+            font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 15px; float: right; transition: all 0.2s ease;
         }
         .btn-guardar:hover { background-color: var(--color-primario); transform: translateY(-1px); }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Diseño Responsivo */
-        @media (max-width: 768px) {
-            .header { flex-direction: column; text-align: center; justify-content: center; }
-            .container { padding: 25px 20px; }
-            .grid-datos { grid-template-columns: 1fr; }
-        }
     </style>
 </head>
 <body>
@@ -326,15 +148,16 @@
         <table id="tabla-req">
             <thead>
                 <tr>
-                    <th>Fecha</th>
-                    <th>Empresa</th>
-                    <th>Puesto Vacante</th>
-                    <th>Postulados</th>
-                    <th>Estatus</th>
-                    <th>Acciones</th>
+                    <th>Fecha (B)</th>
+                    <th>Estatus (C)</th>
+                    <th>Solicitante (D)</th>
+                    <th>Empresa (E)</th>
+                    <th>Posición (I)</th>
+                    <th>Tipo (K)</th>
+                    <th>Detalles</th>
                 </tr>
             </thead>
-            <tbody><tr><td colspan="6" style="text-align:center;">Cargando datos...</td></tr></tbody>
+            <tbody><tr><td colspan="7" style="text-align:center;">Cargando datos...</td></tr></tbody>
         </table>
     </div>
 
@@ -342,10 +165,10 @@
         <table id="tabla-cand">
             <thead>
                 <tr>
-                    <th>Fecha Postulación</th>
+                    <th>Fecha</th>
                     <th>Nombre Candidato</th>
                     <th>Vacante Aplicada</th>
-                    <th>Estatus Proceso</th>
+                    <th>Estatus</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -357,7 +180,7 @@
 <div id="modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 id="modal-titulo">Detalles</h2>
+            <h2 id="modal-titulo">Detalles de la Tarjeta</h2>
             <span class="close-btn" onclick="cerrarModal()">&times;</span>
         </div>
         <div id="modal-body" class="modal-body"></div>
@@ -365,7 +188,6 @@
 </div>
 
 <script>
-    // URL de tu Web App de Google Apps Script
     const API_URL = "https://script.google.com/macros/s/AKfycbybqu3o-oT1uOHSfCHDAES2L_-FgZil48c8f7ZKjJ7LC3VjFEnww8WPWtsQhWDIAN8_/exec";
     
     let datosGlobales = { requisiciones: [], candidatos: [] };
@@ -382,7 +204,7 @@
     }
 
     function formatearFecha(fechaStr) {
-        if(!fechaStr) return "N/A";
+        if(!fechaStr) return "";
         const d = new Date(fechaStr);
         if(isNaN(d.getTime())) return fechaStr.split("T")[0];
         return d.toLocaleDateString('es-MX', {day: '2-digit', month: '2-digit', year: 'numeric'});
@@ -393,7 +215,7 @@
         if(est.includes('activ') || est.includes('contratado')) return `<span class="badge badge-activa">${estatus}</span>`;
         if(est.includes('pendient') || est.includes('entrevista')) return `<span class="badge badge-pendiente">${estatus}</span>`;
         if(est.includes('proceso')) return `<span class="badge badge-proceso">${estatus}</span>`;
-        return `<span class="badge badge-cerrada">${estatus || 'Desconocido'}</span>`;
+        return `<span class="badge badge-cerrada">${estatus || 'Sin estatus'}</span>`;
     }
 
     async function cargarDatos() {
@@ -408,36 +230,42 @@
     }
 
     function renderizarTablas() {
+        // 1. REQUISICIONES
         const tbodyReq = document.querySelector('#tabla-req tbody');
-        const reqsOrdenadas = [...datosGlobales.requisiciones].reverse();
         
-        tbodyReq.innerHTML = reqsOrdenadas.map(item => {
-            const totalCandidatos = datosGlobales.candidatos.filter(c => c.ID_REQUISICION === item.ID_REQUISICION).length;
-            
-            return `
-                <tr>
+        // FILTRO MÁGICO: Evita mostrar filas vacías o basura como "AL", "AK" evaluando si tienen un ID que empiece con "REQ"
+        const reqsValidas = datosGlobales.requisiciones.filter(r => r.ID_REQUISICION && String(r.ID_REQUISICION).startsWith('REQ'));
+        const reqsOrdenadas = [...reqsValidas].reverse();
+        
+        if(reqsOrdenadas.length === 0) {
+            tbodyReq.innerHTML = `<tr><td colspan="7" style="text-align:center;">No hay requisiciones aún.</td></tr>`;
+        } else {
+            tbodyReq.innerHTML = reqsOrdenadas.map(item => `
+                <tr class="fila-datos" ondblclick='verDetalleReq("${item.ID_REQUISICION}")' title="Haz doble clic para abrir la tarjeta completa">
                     <td>${formatearFecha(item.FECHA_CREACION)}</td>
-                    <strong><td>${item.EMPRESA_CLIENTE}</td></strong>
-                    <td>${item.NOMBRE_POSICION}</td>
-                    <td style="font-weight:bold; color:var(--color-primario);">${totalCandidatos} Refs</td>
                     <td>${obtenerBadgeEstatus(item.ESTATUS)}</td>
-                    <td><button class="btn-principal" onclick='verDetalleReq("${item.ID_REQUISICION}")'>Gestionar</button></td>
+                    <td>${item.NOMBRE_SOLICITANTE}</td>
+                    <strong><td style="color:var(--color-primario-dark);">${item.EMPRESA_CLIENTE}</td></strong>
+                    <td>${item.NOMBRE_POSICION}</td>
+                    <td>${item.TIPO_VACANTE}</td>
+                    <td><button class="btn-principal" onclick='verDetalleReq("${item.ID_REQUISICION}")'>Abrir</button></td>
                 </tr>
-            `;
-        }).join('');
+            `).join('');
+        }
 
+        // 2. CANDIDATOS
         const tbodyCand = document.querySelector('#tabla-cand tbody');
-        const candOrdenados = [...datosGlobales.candidatos].reverse();
+        const candValidos = datosGlobales.candidatos.filter(c => c.ID_POSTULACION && String(c.ID_POSTULACION).startsWith('CAND'));
+        const candOrdenados = [...candValidos].reverse();
         
         tbodyCand.innerHTML = candOrdenados.map(item => {
-            const vacante = datosGlobales.requisiciones.find(r => r.ID_REQUISICION === item.ID_REQUISICION);
-            const nombreVacante = vacante ? `${vacante.NOMBRE_POSICION} (${vacante.EMPRESA_CLIENTE})` : item.ID_REQUISICION;
-
+            const vacante = reqsValidas.find(r => r.ID_REQUISICION === item.ID_REQUISICION);
+            const nombreVacante = vacante ? `${vacante.NOMBRE_POSICION}` : item.ID_REQUISICION;
             return `
-                <tr>
+                <tr class="fila-datos" ondblclick='verDetalleCand("${item.ID_POSTULACION}")'>
                     <td>${formatearFecha(item.FECHA_POSTULACION)}</td>
                     <strong><td>${item.NOMBRE_CANDIDATO}</td></strong>
-                    <td style="font-size:12px;">${nombreVacante}</td>
+                    <td>${nombreVacante}</td>
                     <td>${obtenerBadgeEstatus(item.ESTATUS_PROCESO)}</td>
                     <td><button class="btn-principal" onclick='verDetalleCand("${item.ID_POSTULACION}")'>Evaluar</button></td>
                 </tr>
@@ -456,62 +284,105 @@
         });
     }
 
+    // TARJETA DE REQUISICIÓN CON TODAS LAS COLUMNAS MAPEO COMPLETO
     function verDetalleReq(idReq) {
         const d = datosGlobales.requisiciones.find(r => r.ID_REQUISICION === idReq);
+        if(!d) return;
+
         const body = document.getElementById('modal-body');
-        document.getElementById('modal-titulo').innerText = `Requisición: ${d.NOMBRE_POSICION}`;
+        document.getElementById('modal-titulo').innerText = `Tarjeta de Vacante: ${d.NOMBRE_POSICION}`;
         
         body.innerHTML = `
-            <div class="seccion-card" style="background:var(--fondo-seccion); padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid var(--borde-suave);">
-                <label class="label">Cambiar Estatus Operativo de la Vacante</label>
-                <select id="edit-req-estatus">
-                    <option value="Activa" ${d.ESTATUS === 'Activa'?'selected':''}>Activa / Abierta</option>
-                    <option value="Pausada" ${d.ESTATUS === 'Pausada'?'selected':''}>Pausada / En Espera</option>
-                    <option value="Cubierta" ${d.ESTATUS === 'Cubierta'?'selected':''}>Cubierta / Cerrada</option>
-                </select>
-                <button class="btn-guardar" onclick="guardarCambiosReq('${d.ID_REQUISICION}')">Actualizar Vacante</button>
-                <div style="clear:both;"></div>
+            <div class="seccion-card" style="background:var(--fondo-seccion); padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid var(--borde-suave); display:flex; justify-content:space-between; align-items:center;">
+                <div style="flex:1;">
+                    <label class="label">ESTATUS OPERATIVO (Columna C)</label>
+                    <select id="edit-req-estatus" style="max-width:300px;">
+                        <option value="Activa" ${d.ESTATUS === 'Activa'?'selected':''}>Activa / Abierta</option>
+                        <option value="Pausada" ${d.ESTATUS === 'Pausada'?'selected':''}>Pausada / En Espera</option>
+                        <option value="Cubierta" ${d.ESTATUS === 'Cubierta'?'selected':''}>Cubierta / Cerrada</option>
+                    </select>
+                </div>
+                <button class="btn-guardar" style="margin-top:0;" onclick="guardarCambiosReq('${d.ID_REQUISICION}')">Guardar Estatus</button>
             </div>
 
-            <div class="seccion-card">
-                <div class="section-title">1. Datos de Contacto y Empresa</div>
-                <div class="grid-datos">
-                    <div class="dato-item"><span class="label">Empresa Cliente</span><span class="valor">${d.EMPRESA_CLIENTE}</span></div>
-                    <div class="dato-item"><span class="label">Solicitante</span><span class="valor">${d.NOMBRE_SOLICITANTE}</span></div>
-                    <div class="dato-item"><span class="label">Contacto</span><span class="valor">Tel: ${d.TELEFONO_CONTACTO} / Cel: ${d.CELULAR_CONTACTO}</span></div>
-                    <div class="dato-item"><span class="label">Email</span><span class="valor">${d.EMAIL_CONTACTO}</span></div>
-                </div>
+            <div class="section-title">1. Información Comercial y de Contacto</div>
+            <div class="grid-datos">
+                <div class="dato-item"><span class="label">ID de Creación (A-B)</span><span class="valor">${d.ID_REQUISICION}<br><small>${formatearFecha(d.FECHA_CREACION)}</small></span></div>
+                <div class="dato-item"><span class="label">Empresa (E)</span><span class="valor"><strong>${d.EMPRESA_CLIENTE || '-'}</strong></span></div>
+                <div class="dato-item"><span class="label">Solicitante (D)</span><span class="valor">${d.NOMBRE_SOLICITANTE || '-'}</span></div>
+                <div class="dato-item"><span class="label">Contacto (F-G-H)</span><span class="valor">📞 ${d.TELEFONO_CONTACTO || '-'}<br>📱 ${d.CELULAR_CONTACTO || '-'}<br>✉️ ${d.EMAIL_CONTACTO || '-'}</span></div>
             </div>
 
-            <div class="seccion-card">
-                <div class="section-title">2. Perfil y Requisitos Técnico-Competenciales</div>
-                <div class="grid-datos">
-                    <div class="dato-item"><span class="label">Vacantes</span><span class="valor">${d.NUMERO_VACANTES} (${d.TIPO_VACANTE})</span></div>
-                    <div class="dato-item"><span class="label">Ubicación / Horarios</span><span class="valor">${d.UBICACION} | ${d.HORARIO_LABORAL}</span></div>
-                    <div class="dato-item"><span class="label">Escolaridad Mínima</span><span class="valor">${d.ESCOLARIDAD}</span></div>
-                    <div class="dato-item"><span class="label">Idiomas Requeridos</span><span class="valor">${d.IDIOMAS || 'No especifica'}</span></div>
-                </div>
-                <div class="dato-item" style="margin-top:10px;"><span class="label">Objetivo de la Posición</span><div class="valor">${d.OBJETIVO_PUESTO}</div></div>
-                <div class="dato-item" style="margin-top:10px;"><span class="label">Experiencia Requerida e Indispensables</span><div class="valor">${d.EXPERIENCIA_REQUERIDA}<br><br><b>Obligatorio:</b> ${d.REQUISITOS_INDISPENSABLES}</div></div>
-                <div class="dato-item" style="margin-top:10px;"><span class="label">Habilidades de Tecnología</span><div class="valor">${d.HABILIDADES_TECNOLOGICAS || 'Ninguna'}</div></div>
+            <div class="section-title">2. Datos de la Posición</div>
+            <div class="grid-datos">
+                <div class="dato-item"><span class="label">Posición (I)</span><span class="valor">${d.NOMBRE_POSICION || '-'}</span></div>
+                <div class="dato-item"><span class="label">Vacantes (J-K)</span><span class="valor">${d.NUMERO_VACANTES || '-'} - ${d.TIPO_VACANTE || '-'}</span></div>
+                <div class="dato-item"><span class="label">Ubicación (L)</span><span class="valor">${d.UBICACION || '-'}</span></div>
+                <div class="dato-item"><span class="label">Horario (M)</span><span class="valor">${d.HORARIO_LABORAL || '-'}</span></div>
+                <div class="dato-item"><span class="label">Reporta A (N)</span><span class="valor">${d.REPORTA_A || '-'}</span></div>
             </div>
+            <div class="dato-item" style="margin-top:10px;"><span class="label">Objetivo del Puesto (S)</span><div class="valor">${d.OBJETIVO_PUESTO || '-'}</div></div>
+
+            <div class="section-title">3. Perfil del Candidato</div>
+            <div class="grid-datos">
+                <div class="dato-item"><span class="label">Edad (O)</span><span class="valor">${d.EDAD_MIN_MAX || '-'}</span></div>
+                <div class="dato-item"><span class="label">Estado Civil (P)</span><span class="valor">${d.ESTADO_CIVIL || '-'}</span></div>
+                <div class="dato-item"><span class="label">Género (Q)</span><span class="valor">${d.GENERO || '-'}</span></div>
+                <div class="dato-item"><span class="label">Escolaridad (R)</span><span class="valor">${d.ESCOLARIDAD || '-'}</span></div>
+            </div>
+
+            <div class="section-title">4. Requisitos y Competencias</div>
+            <div class="grid-datos" style="grid-template-columns: 1fr 1fr;">
+                <div class="dato-item"><span class="label">Experiencia Requerida (T)</span><div class="valor">${d.EXPERIENCIA_REQUERIDA || '-'}</div></div>
+                <div class="dato-item"><span class="label">Requisitos Indispensables (U)</span><div class="valor">${d.REQUISITOS_INDISPENSABLES || '-'}</div></div>
+                <div class="dato-item"><span class="label">Requisitos Deseables (V)</span><div class="valor">${d.REQUISITOS_DESEABLES || '-'}</div></div>
+                <div class="dato-item"><span class="label">Conocimientos / Cualidades (W)</span><div class="valor">${d.CONOCIMIENTOS_CUALIDADES || '-'}</div></div>
+            </div>
+            <div class="grid-datos" style="margin-top:15px;">
+                <div class="dato-item"><span class="label">Hab. Tecnológicas (X)</span><span class="valor">${d.HABILIDADES_TECNOLOGICAS || '-'}</span></div>
+                <div class="dato-item"><span class="label">Idiomas (Y)</span><span class="valor">${d.IDIOMAS || '-'}</span></div>
+                <div class="dato-item"><span class="label">Competencias a Evaluar (Z)</span><span class="valor">${d.COMPETENCIAS_EVALUAR || '-'}</span></div>
+            </div>
+            <div class="dato-item" style="margin-top:10px;"><span class="label">Actividades a Desempeñar (AA)</span><div class="valor">${d.ACTIVIDADES_DESEMPEÑAR || '-'}</div></div>
+
+            <div class="section-title">5. Compensaciones y Sueldo</div>
+            <div class="grid-datos">
+                <div class="dato-item"><span class="label">Sueldo Bruto (AB)</span><span class="valor">$${d.SUELDO_BRUTO || '-'}</span></div>
+                <div class="dato-item"><span class="label">Sueldo Neto (AC)</span><span class="valor">$${d.SUELDO_NETO || '-'}</span></div>
+                <div class="dato-item"><span class="label">Esquema Pago (AG)</span><span class="valor">${d.ESQUEMA_PAGO || '-'}</span></div>
+                <div class="dato-item"><span class="label">Frecuencia Pago (AH)</span><span class="valor">${d.FRECUENCIA_PAGO || '-'}</span></div>
+            </div>
+            <div class="grid-datos" style="grid-template-columns: 1fr 1fr;">
+                <div class="dato-item"><span class="label">Prestaciones de Ley (AD)</span><div class="valor">${d.PRESTACIONES_LEY || '-'}</div></div>
+                <div class="dato-item"><span class="label">Prestaciones Superiores (AE)</span><div class="valor">${d.PRESTACIONES_SUPERIORES || '-'}</div></div>
+            </div>
+            <div class="dato-item" style="margin-top:10px;"><span class="label">Compensaciones Variables (AF)</span><div class="valor">${d.COMPENSACIONES_VARIABLES || '-'}</div></div>
+
+            <div class="section-title">6. Condiciones Finales</div>
+            <div class="grid-datos">
+                <div class="dato-item"><span class="label">Tipo de Contrato (AI)</span><span class="valor">${d.TIPO_CONTRATO || '-'}</span></div>
+                <div class="dato-item"><span class="label">Periodo Prueba (AJ)</span><span class="valor">${d.PERIODO_PRUEBA || '-'}</span></div>
+                <div class="dato-item"><span class="label">Auto/Transporte (AK)</span><span class="valor">${d.REQUISITOS_AUTO_TRANSPORTE || '-'}</span></div>
+            </div>
+            <div class="dato-item" style="margin-top:10px;"><span class="label">Observaciones Extras (AL)</span><div class="valor">${d.OBSERVACIONES_EXTRAS || 'Sin observaciones'}</div></div>
         `;
         document.getElementById('modal').style.display = 'flex';
     }
 
+    // TARJETA PARA CANDIDATOS
     function verDetalleCand(idPost) {
         const c = datosGlobales.candidatos.find(cand => cand.ID_POSTULACION === idPost);
         const body = document.getElementById('modal-body');
-        document.getElementById('modal-titulo').innerText = `Evaluación: ${c.NOMBRE_CANDIDATO}`;
+        document.getElementById('modal-titulo').innerText = `Candidato: ${c.NOMBRE_CANDIDATO}`;
         
         body.innerHTML = `
             <div class="seccion-card" style="background: var(--fondo-seccion); padding: 20px; border-radius: 8px; border: 1px solid #99d5da; margin-bottom:20px;">
-                <h3 style="font-size:13px; color:var(--color-primario-dark); margin-bottom:10px; text-transform:uppercase;">Área de Calificación del Reclutador</h3>
+                <h3 style="font-size:13px; color:var(--color-primario-dark); margin-bottom:10px; text-transform:uppercase;">Calificación del Reclutador</h3>
                 <div class="grid-datos" style="grid-template-columns: 1fr 2fr;">
                     <div class="dato-item">
                         <label class="label">Estatus del Proceso</label>
                         <select id="edit-cand-estatus">
-                            <option value="Pendiente" ${c.ESTATUS_PROCESO==='Pendiente'?'selected':''}>Pendiente / Sin Revisar</option>
+                            <option value="Pendiente" ${c.ESTATUS_PROCESO==='Pendiente'?'selected':''}>Pendiente</option>
                             <option value="Filtro Telefónico" ${c.ESTATUS_PROCESO==='Filtro Telefónico'?'selected':''}>Filtro Telefónico</option>
                             <option value="En Entrevista" ${c.ESTATUS_PROCESO==='En Entrevista'?'selected':''}>En Entrevista</option>
                             <option value="Evaluación Técnica" ${c.ESTATUS_PROCESO==='Evaluación Técnica'?'selected':''}>Evaluación Técnica</option>
@@ -520,26 +391,21 @@
                         </select>
                     </div>
                     <div class="dato-item">
-                        <label class="label">Historial de Notas de la Reclutadora</label>
-                        <textarea id="edit-cand-notas" placeholder="Escribe aquí observaciones de la entrevista, pretensión económica, etc...">${c.NOTAS_RECLUTADOR || ''}</textarea>
+                        <label class="label">Notas de la Reclutadora</label>
+                        <textarea id="edit-cand-notas">${c.NOTAS_RECLUTADOR || ''}</textarea>
                     </div>
                 </div>
                 <button class="btn-guardar" onclick="guardarCambiosCand('${c.ID_POSTULACION}')">Guardar Progreso</button>
                 <div style="clear:both;"></div>
             </div>
 
-            <div class="seccion-card">
-                <div class="section-title">Información del Postulante</div>
-                <div class="grid-datos">
-                    <div class="dato-item"><span class="label">Teléfono</span><span class="valor">${c.TELEFONO}</span></div>
-                    <div class="dato-item"><span class="label">Correo Electrónico</span><span class="valor">${c.CORREO}</span></div>
-                    <div class="dato-item"><span class="label">Código de Vacante</span><span class="valor">${c.ID_REQUISICION}</span></div>
-                    <div class="dato-item">
-                        <span class="label">Acción Rápida</span>
-                        <span class="valor">
-                            <a href="${c.LINK_CV}" target="_blank" style="color:var(--color-primario); font-weight:bold; text-decoration:none; display:block; text-align:center;">📄 Ver Currículum (CV)</a>
-                        </span>
-                    </div>
+            <div class="section-title">Información del Postulante</div>
+            <div class="grid-datos">
+                <div class="dato-item"><span class="label">Teléfono</span><span class="valor">${c.TELEFONO}</span></div>
+                <div class="dato-item"><span class="label">Correo Electrónico</span><span class="valor">${c.CORREO}</span></div>
+                <div class="dato-item">
+                    <span class="label">Currículum Vitae</span>
+                    <span class="valor"><a href="${c.LINK_CV}" target="_blank" style="color:var(--color-primario); font-weight:bold; text-decoration:none;">📄 Abrir CV</a></span>
                 </div>
             </div>
         `;
@@ -547,52 +413,35 @@
     }
 
     async function guardarCambiosCand(idPost) {
-        const nuevoEstatus = document.getElementById('edit-cand-estatus').value;
-        const nuevasNotas = document.getElementById('edit-cand-notas').value;
-        
         const payload = {
             tipo: "actualizar_candidato",
             idPostulacion: idPost,
-            estatusProceso: nuevoEstatus,
-            notasReclutador: nuevasNotas
+            estatusProceso: document.getElementById('edit-cand-estatus').value,
+            notasReclutador: document.getElementById('edit-cand-notas').value
         };
-
         enviarActualizacion(payload);
     }
 
     async function guardarCambiosReq(idReq) {
-        const nuevoEstatus = document.getElementById('edit-req-estatus').value;
-        
         const payload = {
             tipo: "actualizar_requisicion",
             idRequisicion: idReq,
-            estatus: nuevoEstatus
+            estatus: document.getElementById('edit-req-estatus').value
         };
-
         enviarActualizacion(payload);
     }
 
     async function enviarActualizacion(payload) {
         try {
             cerrarModal();
-            document.querySelector('.btn-actualizar').innerText = "Guardando en Sheet...";
-            
-            const res = await fetch(API_URL, {
-                method: "POST",
-                mode: "no-cors",
+            document.querySelector('.btn-actualizar').innerText = "Guardando...";
+            await fetch(API_URL, {
+                method: "POST", mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
             });
-
-            setTimeout(() => {
-                document.querySelector('.btn-actualizar').innerText = "Actualizar Panel";
-                cargarDatos();
-            }, 1200);
-
-        } catch (e) {
-            console.error(e);
-            alert("No se pudo actualizar el registro.");
-        }
+            setTimeout(() => { document.querySelector('.btn-actualizar').innerText = "Actualizar Panel"; cargarDatos(); }, 1200);
+        } catch (e) { alert("Error al guardar"); }
     }
 
     function cerrarModal() { document.getElementById('modal').style.display = 'none'; }
