@@ -4,31 +4,53 @@
     <meta charset="UTF-8">
     <title>Worketers | Panel de Control Avanzado</title>
     <style>
+        /* =========================================================
+           SISTEMA DE DISEÑO WORKETERS - MODO CLARO PURO Y LUMINOSO
+           ========================================================= */
+
         :root {
-            --color-primario: #2563eb;
-            --color-primario-hover: #3b82f6;
-            --color-exito: #10b981;
+            /* Paleta de Colores Worketers */
+            --color-primario: #0096a3;       /* rgb(0, 150, 163) */
+            --color-primario-hover: #2ac2b5; /* rgb(42, 194, 181) */
+            --color-primario-dark: #26857d;  /* rgb(38, 133, 125) */
+            
+            /* Grises y Fondos (Modo Claro) */
             --fondo-pantalla: #f8fafc;
             --fondo-contenedor: #ffffff;
-            --fondo-seccion: #eff6ff;
+            --fondo-seccion: #eef8f8;        /* Turquesa extra claro para secciones */
             --texto-principal: #334155;
             --texto-etiquetas: #1e293b;
             --borde-suave: #e2e8f0;
+            --color-exito: #10b981;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--fondo-pantalla); color: var(--texto-principal); line-height: 1.6; padding: 20px; }
+        /* Reseteo y Tipografía Global */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        body {
+            background-color: var(--fondo-pantalla);
+            color: var(--texto-principal);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* Contenedor Principal (Tarjeta Limpia) */
         .container {
-            max-width: 1300px;
+            max-width: 1300px; /* Ampliado para que las tablas de datos tengan espacio */
             margin: 0 auto;
             background: var(--fondo-contenedor);
-            padding: 30px;
+            padding: 40px;
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
             border: 1px solid var(--borde-suave);
         }
 
+        /* Encabezados de Página */
         .header {
             display: flex;
             justify-content: space-between;
@@ -40,7 +62,19 @@
             gap: 15px;
         }
 
-        .header-title h1 { color: var(--color-primario); font-size: 24px; text-transform: uppercase; letter-spacing: 1px; }
+        .header-title h1 {
+            color: var(--color-primario);
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .header-title p {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 600;
+        }
 
         /* Controles de búsqueda y filtros */
         .search-container {
@@ -49,16 +83,29 @@
             margin-bottom: 20px;
             width: 100%;
         }
-        .search-input {
-            flex: 1;
-            padding: 10px 15px;
+        
+        /* Entradas de Texto Integradas */
+        .search-input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
             border: 1px solid var(--borde-suave);
             border-radius: 6px;
             font-size: 14px;
+            color: var(--texto-principal);
+            background-color: var(--fondo-contenedor);
+            transition: all 0.2s ease;
             outline: none;
         }
-        .search-input:focus { border-color: var(--color-primario); }
+        
+        .search-input::placeholder, textarea::placeholder { color: #94a3b8; }
+        
+        .search-input:focus, select:focus, textarea:focus {
+            border-color: var(--color-primario);
+            box-shadow: 0 0 0 4px rgba(0, 150, 163, 0.1);
+            background-color: var(--fondo-contenedor);
+        }
 
+        /* TABS de Navegación */
         .tabs { display: flex; gap: 10px; }
         .tab-btn {
             background-color: var(--fondo-contenedor);
@@ -71,31 +118,34 @@
             font-weight: 600;
             font-size: 14px;
         }
-        .tab-btn:hover { background-color: var(--fondo-seccion); border-color: #bfdbfe; }
+        
+        .tab-btn:hover {
+            background-color: var(--fondo-seccion);
+            border-color: var(--color-primario-hover);
+        }
+        
         .tab-btn.active-tab {
             background-color: var(--color-primario);
             color: var(--fondo-contenedor);
             border-color: var(--color-primario);
-            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 150, 163, 0.2);
         }
-        .btn-actualizar { background-color: #ecfdf5; color: #059669; border-color: #a7f3d0; }
-        .btn-actualizar:hover { background-color: #059669; color: white; }
 
-        .section-title {
+        .btn-actualizar {
             background-color: var(--fondo-seccion);
-            color: var(--color-primario);
-            border-left: 4px solid var(--color-primario);
-            padding: 10px 15px;
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin: 15px 0;
-            border-radius: 0 6px 6px 0;
+            color: var(--color-primario-dark);
+            border-color: var(--color-primario-hover);
+        }
+        
+        .btn-actualizar:hover {
+            background-color: var(--color-primario-dark);
+            color: white;
         }
 
         .tab-content { display: none; }
         .active { display: block; animation: fadeIn 0.3s; }
 
+        /* TABLAS DE DATOS */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -104,20 +154,22 @@
             overflow: hidden;
             border: 1px solid var(--borde-suave);
         }
+        
         th {
             text-align: left;
             padding: 12px 15px;
-            color: var(--color-primario);
+            color: var(--color-primario-dark);
             text-transform: uppercase;
             font-size: 11px;
             font-weight: 700;
             background-color: var(--fondo-seccion);
             border-bottom: 2px solid var(--borde-suave);
         }
+        
         td { padding: 12px 15px; border-bottom: 1px solid var(--borde-suave); font-size: 14px; }
-        tr:hover { background-color: #f8fafc; }
+        tr:hover { background-color: var(--fondo-seccion); }
 
-        /* Badges de Estado */
+        /* Badges de Estado adaptados a Worketers */
         .badge {
             padding: 4px 8px;
             border-radius: 4px;
@@ -126,23 +178,51 @@
             text-transform: uppercase;
             display: inline-block;
         }
-        .badge-activa { background-color: #dcfce7; color: #166534; }
+        .badge-activa { background-color: #ccfbf1; color: #0f766e; } /* Tonos Teal */
         .badge-pendiente { background-color: #fef9c3; color: #854d0e; }
-        .badge-proceso { background-color: #dbeafe; color: #1e40af; }
+        .badge-proceso { background-color: #e0f2fe; color: #0369a1; }
         .badge-cerrada { background-color: #f1f5f9; color: #475569; }
 
+        /* Títulos de Sección (Modales) */
+        .section-title {
+            background-color: var(--fondo-seccion);
+            color: var(--color-primario-dark);
+            border-left: 4px solid var(--color-primario);
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        /* Botón de Acción Principal de Worketers */
         .btn-principal {
             background-color: var(--color-primario);
-            color: white;
-            padding: 6px 12px;
+            color: var(--fondo-contenedor);
+            padding: 8px 16px;
             border: none;
             border-radius: 6px;
             font-size: 12px;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.2s ease;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 6px rgba(0, 150, 163, 0.2);
         }
-        .btn-principal:hover { background-color: var(--color-primario-hover); }
+
+        .btn-principal:hover {
+            background-color: var(--color-primario-hover);
+            box-shadow: 0 6px 8px rgba(0, 150, 163, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-principal:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 4px rgba(0, 150, 163, 0.2);
+        }
 
         /* Modales Interactivos */
         .modal {
@@ -155,45 +235,72 @@
             justify-content: center;
             align-items: center;
         }
+        
         .modal-content {
             background: var(--fondo-contenedor);
             border-radius: 12px;
-            max-width: 850px;
+            max-width: 900px;
             width: 95%;
             max-height: 85vh;
             overflow-y: auto;
             border: 1px solid var(--borde-suave);
             box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
+        
         .modal-header {
             position: sticky; top: 0; background: var(--fondo-contenedor);
             padding: 15px 25px; display: flex; justify-content: space-between;
             align-items: center; border-bottom: 1px solid var(--borde-suave); z-index: 10;
         }
+        
         .modal-header h2 { color: var(--color-primario); font-size: 18px; text-transform: uppercase;}
         .modal-body { padding: 20px 25px; }
-        .close-btn { cursor: pointer; font-size: 24px; color: #94a3b8; }
-        .close-btn:hover { color: #000; }
+        
+        .close-btn { cursor: pointer; font-size: 24px; color: #94a3b8; transition: color 0.2s; }
+        .close-btn:hover { color: var(--color-primario-dark); }
 
-        .grid-datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 15px; }
+        /* Cuadrículas de datos dentro del modal */
+        .grid-datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px; }
         .dato-item { display: flex; flex-direction: column; }
-        .label { font-size: 11px; font-weight: 600; margin-bottom: 4px; color: var(--texto-etiquetas); text-transform: uppercase; }
-        .valor { font-size: 13px; color: var(--texto-principal); background-color: var(--fondo-pantalla); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--borde-suave); }
-
-        /* Inputs de Edición */
-        .select-interactivo, .textarea-interactivo {
-            width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--color-primario);
-            font-size: 13px; outline: none; background: #fff;
+        
+        .label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--texto-etiquetas);
+            text-transform: uppercase;
         }
-        .textarea-interactivo { height: 80px; resize: vertical; }
+        
+        .valor {
+            font-size: 13px;
+            color: var(--texto-principal);
+            background-color: var(--fondo-pantalla);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--borde-suave);
+        }
+
+        textarea { resize: vertical; min-height: 80px; }
+
         .btn-guardar {
-            background-color: var(--color-exito); color: white; padding: 10px 20px;
+            background-color: var(--color-primario-dark);
+            color: white; padding: 10px 20px;
             border: none; border-radius: 6px; font-size: 13px; font-weight: bold;
             cursor: pointer; text-transform: uppercase; margin-top: 15px; float: right;
+            box-shadow: 0 4px 6px rgba(38, 133, 125, 0.2);
+            transition: all 0.2s ease;
         }
-        .btn-guardar:hover { opacity: 0.9; }
+        .btn-guardar:hover { background-color: var(--color-primario); transform: translateY(-1px); }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Diseño Responsivo */
+        @media (max-width: 768px) {
+            .header { flex-direction: column; text-align: center; justify-content: center; }
+            .container { padding: 25px 20px; }
+            .grid-datos { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -201,7 +308,8 @@
 <div class="container">
     <div class="header">
         <div class="header-title">
-            <h1>HiTalent Admin Pro</h1>
+            <h1>Panel Worketers</h1>
+            <p>Gestión de Talento y Requisiciones</p>
         </div>
         <div class="tabs">
             <button class="tab-btn active-tab" onclick="cambiarVista('req', this)">Requisiciones</button>
@@ -260,7 +368,7 @@
     // URL de tu Web App de Google Apps Script
     const API_URL = "https://script.google.com/macros/s/AKfycbybqu3o-oT1uOHSfCHDAES2L_-FgZil48c8f7ZKjJ7LC3VjFEnww8WPWtsQhWDIAN8_/exec";
     
-    let datos Globales = { requisiciones: [], candidatos: [] };
+    let datosGlobales = { requisiciones: [], candidatos: [] };
     let vistaActual = 'req';
 
     function cambiarVista(id, btn) {
@@ -276,7 +384,7 @@
     function formatearFecha(fechaStr) {
         if(!fechaStr) return "N/A";
         const d = new Date(fechaStr);
-        if(isNaN(d.getTime())) return fechaStr.split("T")[0]; // Fallback por si llega texto directo
+        if(isNaN(d.getTime())) return fechaStr.split("T")[0];
         return d.toLocaleDateString('es-MX', {day: '2-digit', month: '2-digit', year: 'numeric'});
     }
 
@@ -300,12 +408,10 @@
     }
 
     function renderizarTablas() {
-        // 1. RENDER REQUISICIONES (Orden cronológico inverso)
         const tbodyReq = document.querySelector('#tabla-req tbody');
         const reqsOrdenadas = [...datosGlobales.requisiciones].reverse();
         
         tbodyReq.innerHTML = reqsOrdenadas.map(item => {
-            // CRUCE DE DATOS: Contar cuántos candidatos aplican a este ID_REQUISICION
             const totalCandidatos = datosGlobales.candidatos.filter(c => c.ID_REQUISICION === item.ID_REQUISICION).length;
             
             return `
@@ -320,12 +426,10 @@
             `;
         }).join('');
 
-        // 2. RENDER CANDIDATOS
         const tbodyCand = document.querySelector('#tabla-cand tbody');
         const candOrdenados = [...datosGlobales.candidatos].reverse();
         
         tbodyCand.innerHTML = candOrdenados.map(item => {
-            // CRUCE DE DATOS: Buscar nombre de la vacante usando el ID
             const vacante = datosGlobales.requisiciones.find(r => r.ID_REQUISICION === item.ID_REQUISICION);
             const nombreVacante = vacante ? `${vacante.NOMBRE_POSICION} (${vacante.EMPRESA_CLIENTE})` : item.ID_REQUISICION;
 
@@ -341,7 +445,6 @@
         }).join('');
     }
 
-    // Buscador en tiempo real
     function filtrarTabla() {
         const query = document.getElementById('input-busqueda').value.toLowerCase();
         const tablaId = vistaActual === 'req' ? 'tabla-req' : 'tabla-cand';
@@ -353,16 +456,15 @@
         });
     }
 
-    // GESTIÓN DE REQUISICIÓN (Modal)
     function verDetalleReq(idReq) {
         const d = datosGlobales.requisiciones.find(r => r.ID_REQUISICION === idReq);
         const body = document.getElementById('modal-body');
         document.getElementById('modal-titulo').innerText = `Requisición: ${d.NOMBRE_POSICION}`;
         
         body.innerHTML = `
-            <div class="seccion-card" style="background:#f1f5f9; padding:15px; border-radius:8px; margin-bottom:15px;">
+            <div class="seccion-card" style="background:var(--fondo-seccion); padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid var(--borde-suave);">
                 <label class="label">Cambiar Estatus Operativo de la Vacante</label>
-                <select id="edit-req-estatus" class="select-interactivo">
+                <select id="edit-req-estatus">
                     <option value="Activa" ${d.ESTATUS === 'Activa'?'selected':''}>Activa / Abierta</option>
                     <option value="Pausada" ${d.ESTATUS === 'Pausada'?'selected':''}>Pausada / En Espera</option>
                     <option value="Cubierta" ${d.ESTATUS === 'Cubierta'?'selected':''}>Cubierta / Cerrada</option>
@@ -397,19 +499,18 @@
         document.getElementById('modal').style.display = 'flex';
     }
 
-    // GESTIÓN DE CANDIDATO (Modal con Escritura Activa)
     function verDetalleCand(idPost) {
         const c = datosGlobales.candidatos.find(cand => cand.ID_POSTULACION === idPost);
         const body = document.getElementById('modal-body');
         document.getElementById('modal-titulo').innerText = `Evaluación: ${c.NOMBRE_CANDIDATO}`;
         
         body.innerHTML = `
-            <div class="seccion-card" style="background: #eff6ff; padding: 20px; border-radius: 8px; border: 1px solid #bfdbfe; margin-bottom:20px;">
-                <h3 style="font-size:13px; color:var(--color-primario); margin-bottom:10px; text-transform:uppercase;">Área de Calificación del Reclutador</h3>
+            <div class="seccion-card" style="background: var(--fondo-seccion); padding: 20px; border-radius: 8px; border: 1px solid #99d5da; margin-bottom:20px;">
+                <h3 style="font-size:13px; color:var(--color-primario-dark); margin-bottom:10px; text-transform:uppercase;">Área de Calificación del Reclutador</h3>
                 <div class="grid-datos" style="grid-template-columns: 1fr 2fr;">
                     <div class="dato-item">
                         <label class="label">Estatus del Proceso</label>
-                        <select id="edit-cand-estatus" class="select-interactivo">
+                        <select id="edit-cand-estatus">
                             <option value="Pendiente" ${c.ESTATUS_PROCESO==='Pendiente'?'selected':''}>Pendiente / Sin Revisar</option>
                             <option value="Filtro Telefónico" ${c.ESTATUS_PROCESO==='Filtro Telefónico'?'selected':''}>Filtro Telefónico</option>
                             <option value="En Entrevista" ${c.ESTATUS_PROCESO==='En Entrevista'?'selected':''}>En Entrevista</option>
@@ -420,7 +521,7 @@
                     </div>
                     <div class="dato-item">
                         <label class="label">Historial de Notas de la Reclutadora</label>
-                        <textarea id="edit-cand-notas" class="textarea-interactivo" placeholder="Escribe aquí observaciones de la entrevista, pretensión económica, etc...">${c.NOTAS_RECLUTADOR || ''}</textarea>
+                        <textarea id="edit-cand-notas" placeholder="Escribe aquí observaciones de la entrevista, pretensión económica, etc...">${c.NOTAS_RECLUTADOR || ''}</textarea>
                     </div>
                 </div>
                 <button class="btn-guardar" onclick="guardarCambiosCand('${c.ID_POSTULACION}')">Guardar Progreso</button>
@@ -445,7 +546,6 @@
         document.getElementById('modal').style.display = 'flex';
     }
 
-    // PROCESAMIENTO DE CAMBIOS HACIA GOOGLE SHEETS
     async function guardarCambiosCand(idPost) {
         const nuevoEstatus = document.getElementById('edit-cand-estatus').value;
         const nuevasNotas = document.getElementById('edit-cand-notas').value;
@@ -475,18 +575,15 @@
     async function enviarActualizacion(payload) {
         try {
             cerrarModal();
-            // Loader básico simulado cambiando el texto del botón temporalmente
             document.querySelector('.btn-actualizar').innerText = "Guardando en Sheet...";
             
             const res = await fetch(API_URL, {
                 method: "POST",
-                mode: "no-cors", // Requerido para evitar problemas CORS con Macros redirect de Apps Script
+                mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
             });
 
-            // Como usamos no-cors no podemos leer la respuesta directa JSON, 
-            // pero si no cae en catch, se ejecutó. Esperamos 1 segundo y recargamos.
             setTimeout(() => {
                 document.querySelector('.btn-actualizar').innerText = "Actualizar Panel";
                 cargarDatos();
