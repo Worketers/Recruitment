@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HiTalent - Requisición de Personal</title>
+    <title>Worketers - Requisición de Personal</title>
     <link href='https://fonts.googleapis.com/css?family=Lato:300,400,600,700' rel='stylesheet' type='text/css'>
 <!DOCTYPE html>
 <html lang="es">
@@ -12,19 +12,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Check List - Requisición de Personal</title>
-    <style>
-        /* PALETA DE COLORES - MODO CLARO PURO Y LUMINOSO */
+  <style>
+        /* =========================================================
+           SISTEMA DE DISEÑO WORKETERS - MODO CLARO PURO Y LUMINOSO
+           ========================================================= */
+
         :root {
-            --color-primario: #2563eb; /* Azul brillante y claro */
-            --color-primario-hover: #3b82f6; /* Azul más suave para interacciones */
-            --fondo-pantalla: #f8fafc; /* Gris nieve para el fondo general */
-            --fondo-contenedor: #ffffff; /* Blanco puro */
-            --fondo-seccion: #eff6ff; /* Azul cielo ultra pálido para destacar secciones */
-            --texto-principal: #334155; /* Gris pizarra (legible, pero no negro oscuro) */
-            --texto-etiquetas: #1e293b; /* Gris un poco más firme para títulos */
-            --borde-suave: #e2e8f0; /* Bordes muy sutiles */
+            /* Paleta de Colores Worketers */
+            --color-primario: #0096a3;       /* Turquesa principal */
+            --color-primario-hover: #2ac2b5; /* Turquesa claro interacciones */
+            --color-primario-dark: #26857d;  /* Esmeralda oscuro */
+            
+            /* Grises y Fondos (Modo Claro) */
+            --fondo-pantalla: #f8fafc;
+            --fondo-contenedor: #ffffff;
+            --fondo-seccion: #eef8f8;        /* Turquesa extra claro para secciones */
+            --texto-principal: #334155;
+            --texto-etiquetas: #1e293b;
+            --borde-suave: #e2e8f0;
         }
 
+        /* Reseteo y Tipografía Global */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -39,17 +47,18 @@
             padding: 20px;
         }
 
+        /* Contenedor Principal (Tarjeta Limpia) */
         .container {
             max-width: 900px;
             margin: 0 auto;
             background: var(--fondo-contenedor);
             padding: 40px;
-            border-radius: 12px; /* Bordes un poco más redondeados y amigables */
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03); /* Sombra súper ligera y dispersa */
+            border-radius: 12px; /* Bordes amigables */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03); /* Sombra dispersa */
             border: 1px solid var(--borde-suave);
         }
 
-        /* ENCABEZADO MODO CLARO */
+        /* Encabezados de Página */
         .header {
             text-align: center;
             border-bottom: 2px solid var(--borde-suave);
@@ -71,10 +80,10 @@
             font-weight: 600;
         }
 
-        /* SECCIONES LUMINOSAS */
+        /* Títulos de Sección */
         .section-title {
             background-color: var(--fondo-seccion);
-            color: var(--color-primario);
+            color: var(--color-primario-dark);
             border-left: 4px solid var(--color-primario);
             padding: 10px 15px;
             font-size: 16px;
@@ -85,7 +94,7 @@
             border-radius: 0 6px 6px 0;
         }
 
-        /* DISEÑO EN MALLA */
+        /* Sistema de Cuadrícula (Grids) */
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -114,10 +123,11 @@
             color: var(--texto-etiquetas);
         }
 
-        /* CAMPOS DE ENTRADA CLAROS */
+        /* Entradas de Texto y Selects */
         input[type="text"],
         input[type="number"],
         input[type="email"],
+        input[type="password"],
         textarea,
         select {
             width: 100%;
@@ -137,16 +147,16 @@
         input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: var(--color-primario);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            box-shadow: 0 0 0 4px rgba(0, 150, 163, 0.1);
             background-color: var(--fondo-contenedor);
         }
 
         textarea {
             resize: vertical;
-            height: 80px;
+            min-height: 80px;
         }
 
-        /* CHECKBOXES Y RADIOS LUMINOSOS */
+        /* Botones estilo Checkbox y Radio */
         .checkbox-group, .radio-group {
             display: flex;
             flex-wrap: wrap;
@@ -169,7 +179,7 @@
 
         .checkbox-item:hover, .radio-item:hover {
             background-color: var(--fondo-seccion);
-            border-color: #bfdbfe;
+            border-color: #99d5da; /* Borde turquesa tenue al pasar el mouse */
         }
 
         .checkbox-item input, .radio-item input {
@@ -179,13 +189,13 @@
             accent-color: var(--color-primario);
         }
 
-        /* BOTÓN DE ACCIÓN CLARO Y VIBRANTE */
+        /* Botón de Acción Principal */
         .btn-container {
             margin-top: 40px;
             text-align: right;
         }
 
-        .btn-submit {
+        .btn-submit, .btn-principal {
             background-color: var(--color-primario);
             color: var(--fondo-contenedor);
             padding: 14px 32px;
@@ -197,28 +207,28 @@
             transition: all 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 150, 163, 0.2);
         }
 
-        .btn-submit:hover {
+        .btn-submit:hover, .btn-principal:hover {
             background-color: var(--color-primario-hover);
-            box-shadow: 0 6px 8px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 6px 8px rgba(0, 150, 163, 0.3);
             transform: translateY(-1px);
         }
 
-        .btn-submit:active {
+        .btn-submit:active, .btn-principal:active {
             transform: scale(0.98);
-            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 2px 4px rgba(0, 150, 163, 0.2);
         }
 
-        .btn-submit:disabled {
+        .btn-submit:disabled, .btn-principal:disabled {
             background-color: #cbd5e1;
             box-shadow: none;
             cursor: not-allowed;
             color: #f8fafc;
         }
 
-        /* RESPONSIVO */
+        /* Diseño Responsivo */
         @media (max-width: 768px) {
             .grid-2, .grid-3 {
                 grid-template-columns: 1fr;
