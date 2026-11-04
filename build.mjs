@@ -1,5 +1,14 @@
 import {readFileSync,writeFileSync} from 'node:fs';
-// Un mismo diseño y comportamiento para todas las entradas de GitHub Pages.
-const source=readFileSync(new URL('./App.html',import.meta.url),'utf8');
-const views={index:'inicio',candidatos:'candidatos',cliente:'cliente',admin:'admin',superadmin:'superadmin'};
-for(const [file,view] of Object.entries(views))writeFileSync(new URL(`./${file}.html`,import.meta.url),source.replace(/<\?= initialView \?>/g,view));
+const read=name=>readFileSync(new URL(name,import.meta.url),'utf8');
+const write=(name,text)=>writeFileSync(new URL(name,import.meta.url),text);
+const brand=JSON.parse(read('./brand.json'));
+for(const key of ['brand','product','function'])if(typeof brand[key]!=='string'||! /^[\p{L}\p{N} .·&/-]{1,60}$/u.test(brand[key]))throw new Error(`Revisa ${key} en brand.json`);
+const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const colors=['primary','action','ink','background'].map(k=>{const v=brand.colors[k];if(!/^#[0-9a-f]{6}$/i.test(v))throw new Error(`Color no válido: ${k}`);return `--wk-${k}: ${v};`;}).join('');
+const tokens={BRAND:escape(brand.brand),PRODUCT:escape(brand.product),FUNCTION:escape(brand.function),TITLE:escape(`${brand.brand} · ${brand.product}`),FOOTER:escape(brand.footer),THEME_CSS:read('./worketers.css')+`\n:root{${colors}}\n`};
+let source=read('./App.template.html');
+for(const [key,value] of Object.entries(tokens))source=source.split(`{{${key}}}`).join(value);
+if(/\{\{[A-Z_]+\}\}/.test(source))throw new Error('Hay una etiqueta de marca sin resolver.');
+write('./App.html',source);
+write('./Brand.js','// Generado desde brand.json. Editar la configuración y ejecutar node build.mjs.\nconst BRAND_ = '+JSON.stringify(brand,null,2)+';\n');
+for(const [file,view] of Object.entries({index:'inicio',candidatos:'candidatos',cliente:'cliente',admin:'admin',superadmin:'superadmin'}))write(`./${file}.html`,source.replace(/<\?= initialView \?>/g,view));

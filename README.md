@@ -1,4 +1,4 @@
-# HiTalent · Worketers
+# Worketers · Talento
 
 Portal de reclutamiento con pantallas alojadas en GitHub Pages y servidor en Google Apps Script, Google Sheets y Drive.
 
@@ -50,10 +50,22 @@ clasp push --force
 clasp deploy --deploymentId ID_IMPLEMENTACION --description "Descripción de la versión"
 ```
 
-`App.html` es la fuente común; `build.mjs` genera inicio, candidatos, checklist y accesos con su vista inicial. El flujo de GitHub ejecuta pruebas y comprueba que las pantallas generadas estén actualizadas.
+`App.template.html` es la fuente común; `build.mjs` genera inicio, candidatos, checklist y accesos con su vista inicial. El flujo de GitHub ejecuta pruebas y comprueba que las pantallas generadas estén actualizadas.
 
 Las pruebas usan Google simulado en memoria y bcrypt real: verifican autenticación, migración, roles, cambio obligatorio, contraseñas débiles, usuario duplicado, revocación, limitación de intentos, privacidad, CV, idempotencia y concurrencia. No envían correos ni escriben datos reales.
 
 La bitácora registra operaciones del portal y no es inmutable frente a quien tenga edición directa de la hoja. No es necesario compartir la hoja ni la carpeta de CV con los colaboradores. Apps Script, correo y Drive mantienen las cuotas de la cuenta de Google.
 
 Biblioteca: [bcrypt.js](https://github.com/dcodeIO/bcrypt.js), licencia en `BCRYPT-LICENSE.txt`. El adaptador de Apps Script usa exclusivamente las funciones síncronas y deshabilita los temporizadores, que ese runtime no proporciona.
+
+## Identidad reusable Worketers
+
+La marca común es **Worketers**; el módulo actual es **Talento** y su función es **Reclutamiento**. El encabezado presenta estos tres niveles sin marcas secundarias ni el prefijo POR.
+
+- `brand.json`: nombres, descripción, pie y colores.
+- `worketers.css`: componentes comunes, estados, espaciado y reglas para móvil.
+- `App.template.html`: contenido y comportamiento del portal, separado del estilo.
+- `build.mjs`: genera las cinco entradas públicas, `App.html` para Apps Script y `Brand.js` para sus títulos y mensajes.
+- `worketers-demo.html`: ejemplos de Talento/Reclutamiento, Equipos/Inventario y Gestión/Operaciones.
+
+Para otro proyecto, cambia `product` y `function` en `brand.json`, conserva la marca Worketers y ejecuta `node build.mjs`. Los estilos también se pueden copiar solos a una página HTML con una etiqueta link. No edites a mano los archivos generados. Para sincronizar Apps Script se incluye `Brand.js` en `.claspignore`; no contiene datos de la hoja ni de usuarios.
