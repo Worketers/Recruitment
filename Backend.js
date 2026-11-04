@@ -5,9 +5,9 @@ const REQ_FIELDS_ = ['nombreSolicitante','empresaCliente','telefonoContacto','ce
 const SCHEMA_ = {
   Requisiciones: ['idRequisicion','fecha','estatus'].concat(REQ_FIELDS_, ['actualizadoEn','actualizadoPor','version']),
   Candidatos: ['idPostulacion','idRequisicion','fecha','nombreCandidato','telefono','correo','linkCV','estatusProceso','notasReclutador','puestoDeseado','nivelEstudios','cvFileId','consentimientoEn','actualizadoEn','actualizadoPor','version','solicitudId'],
-  Usuarios: ['correo','nombre','rol','activo','creadoEn','actualizadoEn','version'],
+  Usuarios: ['correo','nombre','rol','activo','creadoEn','actualizadoEn','version','usuario','passwordHash','cambiarPassword'],
   Bitacora: ['id','fecha','actor','accion','entidad','registroId','antes','despues'],
-  Sesiones: ['hash','correo','expiraEn','creadaEn'],
+  Sesiones: ['hash','correo','expiraEn','creadaEn','soloPassword'],
   Solicitudes: ['solicitudId','tipo','registroId','fecha']
 };
 const CAND_STATES_ = ['Pendiente','En revisión','Entrevista','En proceso','Contratado','Descartado'];
@@ -20,9 +20,16 @@ function doGet(e) {
   template.initialView = ['inicio','candidatos','cliente','admin','superadmin'].indexOf(view) >= 0 ? view : 'inicio';
   return template.evaluate().setTitle('HiTalent · Worketers').addMetaTag('viewport','width=device-width, initial-scale=1');
 }
-function doPost() {
-  // Las rutas antiguas no exponen ni modifican datos personales.
-  return ContentService.createTextOutput(JSON.stringify({success:false,error:'Usa el portal actualizado.'})).setMimeType(ContentService.MimeType.JSON);
+function doPost(e) {
+  let response;
+  try {
+    const raw = e && e.postData && e.postData.contents;
+    if (typeof raw !== 'string' || raw.length > 7100000) throw new Error('Solicitud inválida.');
+    const request = JSON.parse(raw);
+    if (!request || typeof request.action !== 'string' || request.action.length > 60) throw new Error('Solicitud inválida.');
+    response = api(request.action, request.data, request.token);
+  } catch (err) { response = {success:false,error:'Solicitud inválida.'}; }
+  return ContentService.createTextOutput(JSON.stringify(response)).setMimeType(ContentService.MimeType.JSON);
 }
 function inicializarProyecto() {
   // La identidad activa evita que un visitante ejecute como el propietario.
@@ -61,14 +68,24 @@ function inicializarProyecto_() {
 function api(action, data, token) {
   try {
     if (PropertiesService.getScriptProperties().getProperty('INITIALIZED') !== '1') throw new Error('El portal está en preparación. Intenta más tarde.');
+    credentialSchema_();
     data = data || {};
     if (action === 'vacantes') return ok_(publicJobs_());
     if (action === 'solicitarCodigo') return ok_(requestCode_(data));
     if (action === 'verificarCodigo') return ok_(verifyCode_(data));
+    if (action === 'iniciarSesion') return ok_(passwordLogin_(data));
     if (action === 'postular') return ok_(locked_(function(){return apply_(data);}));
     if (action === 'requisicion') return ok_(locked_(function(){return createReq_(data);}));
     const user = authenticate_(token);
     if (action === 'salir') { removeSession_(token); return ok_({}); }
+    if (action === 'miSesion') return ok_({perfil:profile_(user)});
+    if (action === 'cambiarPassword') return ok_(locked_(function(){return changePassword_(authenticate_(token),data);}));
+    if (profile_(user).cambiarPassword) throw new Error('Cambia tu contraseña para continuar.');
+    if (action === 'enlaceChecklist') {
+      if (['admin','superadmin'].indexOf(user.rol)<0) throw new Error('Solo los administradores pueden compartir el checklist.');
+      audit_(user.correo,'obtener_enlace_checklist','Sistema','checklist',{},{});
+      return ok_({url:'https://worketers.github.io/Recruitment/cliente.html'});
+    }
     if (action === 'panel') return ok_({perfil:profile_(user),requisiciones:rows_('Requisiciones'),candidatos:rows_('Candidatos')});
     if (action === 'perfil') return ok_(locked_(function(){
       const name = required_(data.nombre,'Nombre',100);
@@ -99,7 +116,7 @@ function required_(v,label,max){v=String(v||'').trim();if(!v||v.length>(max||200
 function email_(v){v=required_(v,'correo',180).toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v))throw new Error('Correo no válido.');return v;}
 function text_(v,max){v=String(v||'').trim();if(v.length>(max||5000))throw new Error('Texto demasiado largo.');return v;}
 function active_(u){return u && (u.activo===true||u.activo==='TRUE');}
-function profile_(u){return {correo:u.correo,nombre:u.nombre,rol:u.rol,activo:active_(u),version:u.version};}
+function profile_(u){return {correo:u.correo,nombre:u.nombre,rol:u.rol,activo:active_(u),version:u.version,usuario:u.usuario||u.correo,cambiarPassword:u.cambiarPassword===true||u.cambiarPassword==='TRUE'||!u.passwordHash||u._passwordOnly===true};}
 function hash_(v){return Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,v));}
 function random_(){return Utilities.getUuid().replace(/-/g,'')+Utilities.getUuid().replace(/-/g,'');}
 function audit_(actor,action,entity,id,before,after){append_('Bitacora',{id:Utilities.getUuid(),fecha:now_(),actor:actor,accion:action,entidad:entity,registroId:id,antes:JSON.stringify(before),despues:JSON.stringify(after)});}
@@ -108,7 +125,7 @@ function requestCode_(d){
   return locked_(function(){
     if(cache.get('cool:'+key))throw new Error('Espera un minuto antes de pedir otro código.');
     cache.put('cool:'+key,'1',60);
-    const user=rows_('Usuarios').find(function(u){return u.correo===email&&active_(u);});
+    const user=rows_('Usuarios').find(function(u){return email===OWNER_&&u.correo===email&&active_(u);});
     if(user){
       const total=Number(cache.get('mail-count')||0);
       if(total>=80)throw new Error('Se alcanzó el límite temporal de códigos. Intenta más tarde.');
@@ -128,17 +145,17 @@ function verifyCode_(d){return locked_(function(){
   if(record.attempts>5){cache.remove(key);throw new Error('Demasiados intentos. Solicita un código nuevo.');}
   cache.put(key,JSON.stringify(record),600);
   if(record.hash!==hash_(email+':'+code))throw new Error('Código inválido o vencido.');
-  const user=rows_('Usuarios').find(function(u){return u.correo===email&&active_(u);});if(!user)throw new Error('Acceso suspendido.');
+  const user=rows_('Usuarios').find(function(u){return email===OWNER_&&u.correo===email&&active_(u);});if(!user)throw new Error('Código inválido o vencido.');
   cache.remove(key);
   const token=random_();
   // Evitar crecimiento indefinido de sesiones vencidas.
   const s=sheet_('Sesiones'),sessions=rows_('Sesiones');
   for(let i=sessions.length-1;i>=0;i--)if(Date.parse(sessions[i].expiraEn)<Date.now())s.deleteRow(i+2);
-  append_('Sesiones',{hash:hash_(token),correo:email,expiraEn:new Date(Date.now()+8*3600000).toISOString(),creadaEn:now_()});
+  append_('Sesiones',{hash:hash_(token),correo:email,expiraEn:new Date(Date.now()+8*3600000).toISOString(),creadaEn:now_(),soloPassword:true});
   audit_(email,'iniciar_sesion','Usuarios',email,{},{});
-  return {token:token,perfil:profile_(user)};
+  return {token:token,perfil:profile_(Object.assign({},user,{_passwordOnly:true}))};
 });}
-function authenticate_(token){if(typeof token!=='string'||token.length!==64)throw new Error('Inicia sesión para continuar.');const s=rows_('Sesiones').find(function(r){return r.hash===hash_(token)&&Date.parse(r.expiraEn)>Date.now();});if(!s)throw new Error('La sesión venció. Inicia sesión.');const u=rows_('Usuarios').find(function(r){return r.correo===s.correo&&active_(r);});if(!u)throw new Error('Acceso suspendido.');return u;}
+function authenticate_(token){if(typeof token!=='string'||token.length!==64)throw new Error('Inicia sesión para continuar.');const s=rows_('Sesiones').find(function(r){return r.hash===hash_(token)&&Date.parse(r.expiraEn)>Date.now();});if(!s)throw new Error('La sesión venció. Inicia sesión.');const u=rows_('Usuarios').find(function(r){return r.correo===s.correo&&active_(r);});if(!u)throw new Error('Acceso suspendido.');return Object.assign({},u,{_passwordOnly:s.soloPassword===true||s.soloPassword==='TRUE'});}
 function removeSession_(token){locked_(function(){const rows=rows_('Sesiones'),i=rows.findIndex(function(s){return s.hash===hash_(token);});if(i>=0)sheet_('Sesiones').deleteRow(i+2);});}
 function publicJobs_(){return rows_('Requisiciones').filter(function(r){return r.estatus==='Activa';}).map(function(r){return {idRequisicion:r.idRequisicion,nombrePosicion:r.nombrePosicion,ubicacion:r.ubicacion,objetivoPuesto:r.objetivoPuesto,experienciaRequerida:r.experienciaRequerida,requisitosIndispensables:r.requisitosIndispensables};});}
 function submission_(d,type){const id=required_(d.solicitudId,'identificador de envío',80);if(!/^[a-zA-Z0-9-]{16,80}$/.test(id))throw new Error('Identificador inválido.');const old=rows_('Solicitudes').find(function(r){return r.solicitudId===id;});if(old&&old.tipo!==type)throw new Error('Identificador ya utilizado.');return old;}
@@ -198,9 +215,13 @@ function saveUser_(u,d){
   if(u.rol!=='superadmin')throw new Error('Solo superadmin.');
   const email=email_(d.correo),old=rows_('Usuarios').find(function(r){return r.correo===email;});
   if(email===OWNER_&&(d.rol!=='superadmin'||d.activo!==true))throw new Error('No puedes suspender ni degradar al propietario.');
-  if(['superadmin','reclutador'].indexOf(d.rol)<0||typeof d.activo!=='boolean')throw new Error('Perfil inválido.');
+  if(['superadmin','admin','reclutador'].indexOf(d.rol)<0||typeof d.activo!=='boolean')throw new Error('Perfil inválido.');
   if(old)version_(old,d);
   const changes={correo:email,nombre:required_(d.nombre,'nombre',100),rol:d.rol,activo:d.activo,actualizadoEn:now_(),version:old?Number(old.version)+1:1};
+  changes.usuario=username_(d.usuario||(old&&old.usuario)||email);
+  if(rows_('Usuarios').some(function(r){return r.correo!==email&&(r.usuario===changes.usuario||r.correo===changes.usuario||r.usuario===email);}))throw new Error('Ese usuario ya está ocupado.');
+  if(!old&&!d.password)throw new Error('Define una contraseña inicial para el integrante.');
+  if(d.password){changes.passwordHash=passwordHash_(d.password);changes.cambiarPassword=true;}
   if(old)patch_('Usuarios','correo',email,changes);else append_('Usuarios',Object.assign({creadoEn:now_()},changes));
   // Revocar sesiones en cada cambio de permisos, incluida la reactivación.
   const sessions=rows_('Sesiones');for(let i=sessions.length-1;i>=0;i--)if(sessions[i].correo===email)sheet_('Sesiones').deleteRow(i+2);
@@ -209,4 +230,41 @@ function saveUser_(u,d){
 function readCv_(u,d){const c=rows_('Candidatos').find(function(r){return r.idPostulacion===d.id;});if(!c||!c.cvFileId)throw new Error('No hay CV adjunto.');const f=DriveApp.getFileById(c.cvFileId),blob=f.getBlob();audit_(u.correo,'consultar_cv','Candidatos',d.id,{},{});return {nombre:f.getName(),mime:blob.getContentType(),base64:Utilities.base64Encode(blob.getBytes())};}
 function limitPublic_(){const c=CacheService.getScriptCache(),key='public:'+Math.floor(Date.now()/60000),n=Number(c.get(key)||0);if(n>=20)throw new Error('Hay muchos registros en este momento. Espera un minuto y reintenta.');c.put(key,String(n+1),120);}
 
-
+function credentialSchema_(){
+  const props=PropertiesService.getScriptProperties();if(props.getProperty('CREDENTIAL_SCHEMA_3')==='1')return;
+  locked_(function(){
+    ['Usuarios','Sesiones'].forEach(function(name){
+      const s=sheet_(name),old=s.getRange(1,1,1,s.getLastColumn()).getValues()[0],headers=SCHEMA_[name];
+      if(old.some(function(h,i){return h!==headers[i];}))throw new Error('Encabezados incompatibles en '+name+'.');
+      if(old.length<headers.length)s.getRange(1,old.length+1,1,headers.length-old.length).setValues([headers.slice(old.length)]);
+    });
+    // Los perfiles existentes conservan su correo como usuario inicial.
+    rows_('Usuarios').forEach(function(u){if(!u.usuario)patch_('Usuarios','correo',u.correo,{usuario:u.correo,cambiarPassword:!u.passwordHash});});
+    props.setProperty('CREDENTIAL_SCHEMA_3','1');
+  });
+}
+function username_(value){const s=required_(value,'usuario',180).toLowerCase();if(!/^[a-z0-9][a-z0-9._@+-]{2,179}$/.test(s))throw new Error('El usuario debe tener al menos 3 caracteres, sin espacios.');return s;}
+function password_(value){if(typeof value!=='string'||value.length<12||value.length>64||bcrypt.truncates(value))throw new Error('Usa una contraseña de 12 a 64 caracteres y hasta 72 bytes.');return value;}
+function passwordHash_(value){const p=password_(value),bytes=Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,random_()).slice(0,16).map(function(b){return b&255;});return bcrypt.hashSync(p,'$2b$12$'+bcrypt.encodeBase64(bytes,16));}
+function newSession_(user){const records=rows_('Sesiones');for(let i=records.length-1;i>=0;i--)if(Date.parse(records[i].expiraEn)<Date.now())sheet_('Sesiones').deleteRow(i+2);const token=random_();append_('Sesiones',{hash:hash_(token),correo:user.correo,expiraEn:new Date(Date.now()+8*3600000).toISOString(),creadaEn:now_(),soloPassword:false});return {token:token,perfil:profile_(user)};}
+function revokeSessions_(email){const sessions=rows_('Sesiones');for(let i=sessions.length-1;i>=0;i--)if(sessions[i].correo===email)sheet_('Sesiones').deleteRow(i+2);}
+function passwordLogin_(d){return locked_(function(){
+  const name=username_(d.usuario),password=typeof d.password==='string'&&d.password.length<=64?d.password:'',cache=CacheService.getScriptCache();
+  const user=rows_('Usuarios').find(function(u){return (u.usuario||u.correo)===name||u.correo===name;}),key='login:'+hash_(user?user.correo:name);
+  const bucket='login-global:'+Math.floor(Date.now()/60000),total=Number(cache.get(bucket)||0);if(total>=60)throw new Error('Demasiados intentos. Intenta en unos minutos.');cache.put(bucket,String(total+1),120);
+  let tries=JSON.parse(cache.get(key)||'{"n":0,"until":0}');if(Date.now()>tries.until)tries={n:0,until:Date.now()+900000};
+  if(tries.n>=5)throw new Error('Demasiados intentos. Espera 15 minutos.');
+  tries.n++;cache.put(key,JSON.stringify(tries),900);
+  const dummy='$2b$12$abcdefghijklmnopqrstuu3E7QGy25KjUvVEmML5fYE3Rfw9GUyJu';
+  const matches=bcrypt.compareSync(password,user&&user.passwordHash?user.passwordHash:dummy);
+  if(!matches||!active_(user)||!user.passwordHash)throw new Error('Usuario o contraseña incorrectos.');
+  cache.remove(key);
+  const result=newSession_(user);audit_(user.correo,'iniciar_sesion','Usuarios',user.correo,{}, {metodo:'password'});return result;
+});}
+function changePassword_(u,d){
+  if(!profile_(u).cambiarPassword&&(!u.passwordHash||!bcrypt.compareSync(String(d.actual||''),u.passwordHash)))throw new Error('La contraseña actual no es correcta.');
+  const next=password_(d.password);if(u.passwordHash&&bcrypt.compareSync(next,u.passwordHash))throw new Error('Elige una contraseña diferente.');
+  const changes={passwordHash:passwordHash_(next),cambiarPassword:false,actualizadoEn:now_(),version:Number(u.version)+1};
+  const updated=patch_('Usuarios','correo',u.correo,changes);revokeSessions_(u.correo);
+  audit_(u.correo,'cambiar_password','Usuarios',u.correo,{}, {passwordActualizada:true});return newSession_(updated);
+}

@@ -1,59 +1,59 @@
 # HiTalent · Worketers
 
-Portal de reclutamiento con Apps Script, Google Sheets, Drive y entradas en GitHub Pages.
+Portal de reclutamiento con pantallas alojadas en GitHub Pages y servidor en Google Apps Script, Google Sheets y Drive.
 
-## Entradas
+## Enlaces
 
-- Inicio: https://worketers.github.io/Recruitment/
-- Candidatos: https://worketers.github.io/Recruitment/candidatos.html
-- Empresas: https://worketers.github.io/Recruitment/cliente.html
-- Reclutadores: https://worketers.github.io/Recruitment/admin.html
+- Inicio y candidatos: https://worketers.github.io/Recruitment/
+- Equipo: https://worketers.github.io/Recruitment/admin.html
 - Superadmin: https://worketers.github.io/Recruitment/superadmin.html
+- Checklist para empresas: https://worketers.github.io/Recruitment/cliente.html
 
-Las entradas llevan al portal servido por Apps Script. La interfaz vive en `App.html` y usa `google.script.run`, por lo que confirma el resultado real del servidor y evita los falsos éxitos de `fetch` con `no-cors`. GitHub conserva el código de ambas capas.
+Las pantallas permanecen en la dirección de GitHub. No se incrusta ni se redirige al portal de Google. Las solicitudes usan POST de texto con respuesta JSON comprobada; no usan `no-cors`, JSONP ni tokens en la URL. La URL pública de Apps Script es únicamente el servicio de datos.
 
-## Puesta en marcha
+## Accesos del equipo
 
-1. En las propiedades privadas del proyecto de Apps Script, configurar `SPREADSHEET_ID` con el ID de la hoja y `OWNER_EMAIL` con el correo del propietario. Ejecutar `inicializarProyecto` con esa cuenta y autorizar Sheets, Drive y envío de correo. La función comprueba la identidad activa; no funciona como ruta anónima de inicialización.
-2. Se preparan `Requisiciones`, `Candidatos`, `Usuarios`, `Bitacora`, `Sesiones` y `Solicitudes` en la hoja configurada. La pestaña vacía original se conserva. La inicialización es repetible y rechaza encabezados incompatibles en lugar de sobrescribir datos.
-3. Se crea la carpeta privada `HiTalent · CV privados`. Su ID queda en las propiedades del script; no se publica en GitHub.
-4. Publicar como aplicación web ejecutada por el propietario y con acceso para cualquier usuario. Este acceso permite abrir la bolsa y enviar formularios; los datos del equipo requieren código y sesión. Si la organización restringe aplicaciones anónimas, resolver la política con su administrador.
-5. Revisar el ID de implementación en `portal.js` y las entradas HTML si se crea una implementación distinta. Usar una nueva versión de la misma implementación para conservar enlaces.
-6. GitHub Pages ya usa `main` / raíz. Los cambios se publican mediante el flujo de Pages existente; el flujo `Verificar portal` ejecuta las pruebas sin cambiar esa configuración.
+El superadmin crea integrantes desde **Equipo y accesos** con nombre, correo, usuario único, rol y contraseña inicial. El usuario puede ser un alias o el correo. La contraseña inicial debe tener de 12 a 64 caracteres y hasta 72 bytes en UTF-8; el integrante debe sustituirla antes de consultar información.
 
-## Operación
+Las contraseñas se guardan con bcryptjs 3.0.3, coste 12 y sal aleatoria independiente. No se muestran ni se guardan en la bitácora. Cambiar o restablecer una contraseña revoca las sesiones anteriores. Los hashes solo se leen en el servidor y nunca forman parte de la respuesta del panel.
 
-- **Candidatos:** registro general o por vacante activa; CV opcional PDF/DOC/DOCX hasta 5 MB; confirmación con folio y consentimiento registrado.
-- **Empresas:** formulario de requisición. Se recibe como `Pausada` hasta que el equipo revise y cambie a `Activa`. `Cerrada` y `Pausada` no aparecen en la bolsa pública.
-- **Reclutadores:** acceso individual por código de un uso enviado al correo autorizado. Ven los mismos candidatos y requisiciones; cambian estados, dejan notas y descargan CV desde el panel. Pueden editar su nombre visible.
-- **Superadmin:** lo anterior, alta y edición de integrantes, suspensión/reactivación, roles y últimos 500 eventos de bitácora con antes/después. El propietario no se puede suspender ni degradar.
-- Cambiar permisos revoca las sesiones del integrante. No se envían invitaciones al crear un perfil: cada integrante solicita su código desde el portal.
-- Los códigos vencen en 10 minutos y se invalidan al usarlos o tras cinco intentos fallidos. Las sesiones vencen en ocho horas. Solo se guardan hashes de códigos y tokens; no se administran contraseñas.
-- El servidor comprueba usuario activo y permisos en cada operación, independientemente de qué botones muestre el navegador.
-- La descarga de CV se registra en bitácora y no requiere compartir públicamente los archivos de Drive.
-- Versiones por registro evitan que una edición antigua sobrescriba un cambio más reciente.
-- Los formularios conservan su identificador al reintentar para no duplicar registros. Las entradas se guardan como texto cuando pudieran interpretarse como fórmulas de Sheets.
+- **Reclutador:** candidatos y requisiciones del equipo, seguimiento, notas y CV privados.
+- **Admin:** lo anterior y el botón **Compartir checklist** para copiar el enlace y enviarlo a la empresa.
+- **Superadmin:** lo anterior, alta/edición/suspensión de usuarios, restablecimiento de contraseña inicial y bitácora.
 
-## Mantenimiento y límites
+El propietario no puede ser suspendido ni degradado. Los integrantes existentes conservan su correo como usuario inicial. El superadmin debe asignarles una contraseña desde el panel.
 
-Apps Script y MailApp tienen cuotas de cuenta. Hay un límite global de 20 envíos públicos por minuto y 80 solicitudes de código por hora, además de un minuto entre códigos por correo. El límite público es una protección básica; para campañas masivas o abuso sostenido conviene añadir verificación contra bots o migrar la recepción a un servicio con límites por visitante.
+Solo el propietario puede usar **Configurar o recuperar acceso del propietario**: verifica su correo mediante un código y define una contraseña. La sesión de recuperación únicamente permite cambiar la contraseña; no da acceso al panel antes de hacerlo. Los colaboradores ingresan con usuario y contraseña y deben solicitar cualquier restablecimiento al superadmin.
 
-Las cuotas de correo, almacenamiento y ejecución dependen de Google y de la cuenta. No compartir la hoja ni la carpeta con los reclutadores: el portal ya controla el acceso. Compartirlas directamente permitiría saltarse la suspensión del portal. La bitácora registra las operaciones del portal; quien tenga edición directa de Sheets puede alterar la hoja, por lo que no es un registro inmutable.
+Hay cinco intentos fallidos por cuenta antes de una espera de 15 minutos y un límite global de intentos por minuto. Las sesiones duran ocho horas y el servidor comprueba el estado y los permisos en cada solicitud.
 
-Los formularios públicos no devuelven candidatos, notas ni contactos de las empresas. El POST anterior se deshabilitó. Ningún dato real, CV, código o sesión debe añadirse al repositorio público.
+## Candidatos y checklist
 
-## Desarrollo
+El inicio solo muestra oportunidades y registro de candidatos, además del acceso del equipo. No contiene botones de empresa ni de solicitud de personal.
 
-Requiere Node.js para pruebas y `@google/clasp` autenticado para sincronizar Apps Script. El archivo local `.clasp.json` (ignorado) debe tener `rootDir: "."` y el ID del proyecto autorizado.
+El checklist se abre con su enlace directo, que el admin o superadmin puede copiar desde su panel. No exige cuenta de colaborador. Ocultarlo del inicio no convierte el enlace en privado: cualquier persona que lo reciba puede abrirlo. Las requisiciones llegan como `Pausada` hasta que el equipo las revise y active.
+
+Los candidatos pueden registrarse con o sin CV. Los archivos PDF, DOC o DOCX de hasta 5 MB se guardan en una carpeta privada de Drive; la descarga requiere sesión de equipo. Se mantienen el registro de consentimiento, folio, reintentos sin duplicados, control de versiones y bitácora.
+
+## Configuración privada y actualización
+
+En las propiedades de Apps Script deben permanecer `SPREADSHEET_ID`, `OWNER_EMAIL`, `CV_FOLDER_ID` e `INITIALIZED`. No publicar sus valores, datos reales, CV, códigos, contraseñas ni sesiones en este repositorio.
+
+La primera llamada de la nueva versión añade las columnas de credenciales y de sesiones necesarias sin borrar los registros existentes. La migración comprueba los encabezados anteriores y se detiene si no son compatibles.
+
+Sincronizar primero el servidor de Apps Script y actualizar la misma implementación para conservar la URL. Después publicar las pantallas en `main`, que GitHub Pages toma de la raíz. El archivo local `.clasp.json` está ignorado y apunta al proyecto autorizado con `rootDir: "."`; `.claspignore` solo permite los archivos del servidor.
 
 ```text
+node build.mjs
 node test-backend.mjs
 clasp push --force
 clasp deploy --deploymentId ID_IMPLEMENTACION --description "Descripción de la versión"
 ```
 
-Las pruebas usan servicios de Google simulados en memoria: verifican inicialización repetible, autenticación, roles, código de un uso, privacidad pública, CV, idempotencia, concurrencia, bitácora y revocación. No envían correos ni modifican hojas reales. La comprobación visual y la prueba real de los servicios requieren completar la autorización de Google.
+`App.html` es la fuente común; `build.mjs` genera inicio, candidatos, checklist y accesos con su vista inicial. El flujo de GitHub ejecuta pruebas y comprueba que las pantallas generadas estén actualizadas.
 
-Referencia: [comunicación de HTML Service](https://developers.google.com/apps-script/guides/html/communication).
+Las pruebas usan Google simulado en memoria y bcrypt real: verifican autenticación, migración, roles, cambio obligatorio, contraseñas débiles, usuario duplicado, revocación, limitación de intentos, privacidad, CV, idempotencia y concurrencia. No envían correos ni escriben datos reales.
 
+La bitácora registra operaciones del portal y no es inmutable frente a quien tenga edición directa de la hoja. No es necesario compartir la hoja ni la carpeta de CV con los colaboradores. Apps Script, correo y Drive mantienen las cuotas de la cuenta de Google.
 
+Biblioteca: [bcrypt.js](https://github.com/dcodeIO/bcrypt.js), licencia en `BCRYPT-LICENSE.txt`. El adaptador de Apps Script usa exclusivamente las funciones síncronas y deshabilita los temporizadores, que ese runtime no proporciona.
