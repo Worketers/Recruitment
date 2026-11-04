@@ -14,4 +14,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: node build.mjs
+      - run: git diff --exit-code -- index.html candidatos.html cliente.html admin.html superadmin.html
       - run: node test-backend.mjs
