@@ -1,4 +1,4 @@
-/* HiTalent / Worketers. Solo api y doGet/doPost son invocables por clientes. */
+/* Worketers. Solo api y doGet/doPost son invocables por clientes. */
 const DB_ID_ = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
 const OWNER_ = PropertiesService.getScriptProperties().getProperty('OWNER_EMAIL');
 const REQ_FIELDS_ = ['nombreSolicitante','empresaCliente','telefonoContacto','celularContacto','emailContacto','nombrePosicion','numeroVacantes','tipoVacante','ubicacion','horarioLaboral','reportaA','edadMinMax','estadoCivil','genero','escolaridad','objetivoPuesto','experienciaRequerida','requisitosIndispensables','requisitosDeseables','conocimientosCualidades','habilidadesTecnologicas','idiomas','competenciasEvaluar','actividadesDesempenar','sueldoBruto','sueldoNeto','prestacionesLey','prestacionesSuperiores','compensacionesVariables','esquemaPago','frecuenciaPago','tipoContrato','periodoPrueba','requisitosAutoTransporte','observacionesExtras'];
@@ -18,7 +18,7 @@ function doGet(e) {
   const template = HtmlService.createTemplateFromFile('App');
   template.supportEmail = OWNER_ || '';
   template.initialView = ['inicio','candidatos','cliente','admin','superadmin'].indexOf(view) >= 0 ? view : 'inicio';
-  return template.evaluate().setTitle('HiTalent · Worketers').addMetaTag('viewport','width=device-width, initial-scale=1');
+  return template.evaluate().setTitle(BRAND_.brand+' · '+BRAND_.product).addMetaTag('viewport','width=device-width, initial-scale=1');
 }
 function doPost(e) {
   let response;
@@ -58,7 +58,7 @@ function inicializarProyecto_() {
     });
     if (!rows_('Usuarios').some(function(u){return u.correo === OWNER_;})) append_('Usuarios',{correo:OWNER_,nombre:'Administrador',rol:'superadmin',activo:true,creadoEn:now_(),actualizadoEn:now_(),version:1});
     const props = PropertiesService.getScriptProperties();
-    if (!props.getProperty('CV_FOLDER_ID')) props.setProperty('CV_FOLDER_ID',DriveApp.createFolder('HiTalent · CV privados').getId());
+    if (!props.getProperty('CV_FOLDER_ID')) props.setProperty('CV_FOLDER_ID',DriveApp.createFolder(BRAND_.brand+' · '+BRAND_.product+' · CV privados').getId());
     props.setProperty('INITIALIZED','1');
     audit_(OWNER_,'inicializar','Sistema','v2',{}, {esquema:2});
     return 'Proyecto inicializado. CV privados; superadmin: '+OWNER_;
@@ -133,7 +133,7 @@ function requestCode_(d){
       const code=String(parseInt(secret.slice(0,10),16)%1000000).padStart(6,'0');
       cache.put('otp:'+key,JSON.stringify({hash:hash_(email+':'+code),attempts:0,expires:Date.now()+600000}),600);
       cache.put('mail-count',String(total+1),3600);
-      MailApp.sendEmail(email,'Tu código de acceso · HiTalent','Tu código es '+code+'. Caduca en 10 minutos. No lo compartas. Si no lo solicitaste, ignora este correo.');
+      MailApp.sendEmail(email,'Tu código de acceso · '+BRAND_.brand+' '+BRAND_.product,'Tu código es '+code+'. Caduca en 10 minutos. No lo compartas. Si no lo solicitaste, ignora este correo.');
     }
     return {message:'Si tienes acceso activo, recibirás un código válido por 10 minutos.'};
   });

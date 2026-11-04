@@ -1,0 +1,29 @@
+WORKETERS — ESTILO REUTILIZABLE
+
+Una marca fija y dos niveles para cada aplicación:
+Worketers | Talento — Reclutamiento
+Worketers | Equipos — Inventario
+Worketers | Gestión — Operaciones
+
+1. Abre worketers-demo.html para ver los componentes y ejemplos.
+2. Copia worketers.css a tu proyecto e inclúyelo con:
+   <link rel="stylesheet" href="worketers.css">
+3. Reutiliza el encabezado y las clases que aparecen en la demostración.
+4. Cambia el nombre del módulo y la descripción; conserva la marca Worketers.
+5. La paleta se controla con --wk-primary, --wk-action, --wk-ink y --wk-background.
+
+En el repositorio del portal, los nombres y colores se cambian en brand.json.
+El comando node build.mjs actualiza las pantallas, el título y la marca del servidor.
+
+Paleta:
+Turquesa de marca: #0096A3
+Acciones principales: #007A84
+Texto: #173239
+Fondo: #F3F7F7
+
+Botones y campos: 44 px de alto mínimo.
+Tarjetas: bordes suaves, 16 px de radio y contorno ligero.
+Texto: tipografía del sistema, clara y sin dependencia de fuentes externas.
+La marca se mantiene; cambia el módulo y su función.
+
+Este paquete contiene únicamente estilos, configuración y ejemplos.
