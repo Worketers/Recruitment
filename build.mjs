@@ -1,11 +1,11 @@
 import {readFileSync,writeFileSync} from 'node:fs';
-const read=name=>readFileSync(new URL(name,import.meta.url),'utf8');
+const read=name=>readFileSync(new URL(name,import.meta.url),'utf8').replace(/\r\n/g,'\n');
 const write=(name,text)=>writeFileSync(new URL(name,import.meta.url),text);
 const brand=JSON.parse(read('./brand.json'));
 for(const key of ['brand','product','function'])if(typeof brand[key]!=='string'||! /^[\p{L}\p{N} .·&/-]{1,60}$/u.test(brand[key]))throw new Error(`Revisa ${key} en brand.json`);
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const colors=['primary','action','ink','background'].map(k=>{const v=brand.colors[k];if(!/^#[0-9a-f]{6}$/i.test(v))throw new Error(`Color no válido: ${k}`);return `--wk-${k}: ${v};`;}).join('');
-const tokens={BRAND:escape(brand.brand),PRODUCT:escape(brand.product),FUNCTION:escape(brand.function),TITLE:escape(`${brand.brand} · ${brand.product}`),FOOTER:escape(brand.footer),THEME_CSS:read('./worketers.css')+`\n:root{${colors}}\n`};
+const tokens={PSICO_JS:read('./psicometricos.js'),BRAND:escape(brand.brand),PRODUCT:escape(brand.product),FUNCTION:escape(brand.function),TITLE:escape(`${brand.brand} · ${brand.product}`),FOOTER:escape(brand.footer),THEME_CSS:read('./worketers.css')+'\n'+read('./psicometricos.css')+`\n:root{${colors}}\n`};
 let source=read('./App.template.html');
 for(const [key,value] of Object.entries(tokens))source=source.split(`{{${key}}}`).join(value);
 if(/\{\{[A-Z_]+\}\}/.test(source))throw new Error('Hay una etiqueta de marca sin resolver.');

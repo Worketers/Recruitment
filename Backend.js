@@ -81,6 +81,13 @@ function api(action, data, token) {
     if (action === 'miSesion') return ok_({perfil:profile_(user)});
     if (action === 'cambiarPassword') return ok_(locked_(function(){return changePassword_(authenticate_(token),data);}));
     if (profile_(user).cambiarPassword) throw new Error('Cambia tu contraseña para continuar.');
+    if (['psicoPanel','psicoInvitar','psicoPDF'].indexOf(action)>=0) {
+      if (['reclutador','admin','superadmin'].indexOf(user.rol)<0) throw new Error('Acceso no autorizado.');
+      if(action==='psicoPanel') return ok_({candidatos:psicoList_()});
+      if(action==='psicoInvitar') return ok_(locked_(function(){return psicoInvite_(data,authenticate_(token));}));
+      const report=psicoPdf_(required_(data.id,'folio',100));
+      audit_(user.correo,'consultar_reporte','Psicométricos',data.id,{},{});return ok_(report);
+    }
     if (action === 'enlaceChecklist') {
       if (['admin','superadmin'].indexOf(user.rol)<0) throw new Error('Solo los administradores pueden compartir el checklist.');
       audit_(user.correo,'obtener_enlace_checklist','Sistema','checklist',{},{});

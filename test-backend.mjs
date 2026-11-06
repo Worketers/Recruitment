@@ -1,4 +1,5 @@
 import {readFileSync} from 'node:fs';
+import './test-psico.mjs';
 import vm from 'node:vm';
 import crypto from 'node:crypto';
 import assert from 'node:assert/strict';
@@ -29,8 +30,11 @@ assert.equal(call('verificarCodigo',{correo:'owner@example.com',codigo:mails.at(
 success('guardarUsuario',{correo:'recruiter@example.com',nombre:'Recruiter',usuario:'recruiter',password:'Temporary password 2026!',rol:'reclutador',activo:true},owner);
 const temporary=success('iniciarSesion',{usuario:'recruiter',password:'Temporary password 2026!'});
 assert.equal(temporary.perfil.cambiarPassword,true);
+ctx.psicoList_=()=>[];ctx.psicoInvite_=()=>({enviado:true});
+assert.equal(call('psicoPanel').success,false);assert.equal(call('psicoInvitar',{},temporary.token).success,false);
 assert.equal(call('panel',{},temporary.token).success,false);
 const recruiter=success('cambiarPassword',{password:'Personal password 2026!'},temporary.token).token;
+assert.equal(success('psicoPanel',{},recruiter).candidatos.length,0);assert.equal(success('psicoInvitar',{},recruiter).enviado,true);
 assert.equal(call('iniciarSesion',{usuario:'recruiter',password:'Temporary password 2026!'}).success,false);
 assert.equal(success('iniciarSesion',{usuario:'recruiter',password:'Personal password 2026!'}).perfil.usuario,'recruiter');
 assert.equal(call('usuarios',{},recruiter).success,false);assert.equal(call('bitacora',{},recruiter).success,false);
