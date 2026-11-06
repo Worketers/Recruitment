@@ -69,3 +69,11 @@ La marca común es **Worketers**; el módulo actual es **Talento** y su función
 - `worketers-demo.html`: ejemplos de Talento/Reclutamiento, Equipos/Inventario y Gestión/Operaciones.
 
 Para otro proyecto, cambia `product` y `function` en `brand.json`, conserva la marca Worketers y ejecuta `node build.mjs`. Los estilos también se pueden copiar solos a una página HTML con una etiqueta link. No edites a mano los archivos generados. Para sincronizar Apps Script se incluye `Brand.js` en `.claspignore`; no contiene datos de la hoja ni de usuarios.
+
+## Psicométricos integrados
+
+La pestaña Psicométricos usa la misma sesión del equipo (reclutador, admin o superadmin). Desde ella, o desde un candidato, se envía una invitación personal por correo válida durante 24 horas para completar y entregar. El servidor de candidatos también verifica el vencimiento. Los enlaces pendientes sin fecha de vigencia requieren una nueva invitación.
+
+`Psico.js` contiene consultas, envío y reportes; usa `PSICO_SPREADSHEET_ID` en propiedades privadas del servidor. `PsicoConfigPrivate.js` es configuración local excluida del repositorio. Las columnas H:N de la hoja de evaluaciones contienen creación, vencimiento, actor, estado de correo, envío, idempotencia y vínculo a postulación. Las columnas originales se conservan.
+
+Comprobación adicional: `node test-psico.mjs`. Las invitaciones y consultas PDF se registran en la bitácora. La administración independiente de Evalúa está cerrada.
