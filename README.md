@@ -1,4 +1,4 @@
-# Worketers · Talento
+# Way Finder · Talento
 
 Portal de reclutamiento con pantallas alojadas en GitHub Pages y servidor en Google Apps Script, Google Sheets y Drive.
 
@@ -58,9 +58,9 @@ La bitácora registra operaciones del portal y no es inmutable frente a quien te
 
 Biblioteca: [bcrypt.js](https://github.com/dcodeIO/bcrypt.js), licencia en `BCRYPT-LICENSE.txt`. El adaptador de Apps Script usa exclusivamente las funciones síncronas y deshabilita los temporizadores, que ese runtime no proporciona.
 
-## Identidad reusable Worketers
+## Identidad reusable Way Finder
 
-La marca común es **Worketers**; el módulo actual es **Talento** y su función es **Reclutamiento**. El encabezado presenta estos tres niveles sin marcas secundarias ni el prefijo POR.
+La marca común es **Way Finder**; el módulo actual es **Talento** y su función es **Reclutamiento**. El encabezado presenta estos tres niveles sin marcas secundarias ni el prefijo POR.
 
 - `brand.json`: nombres, descripción, pie y colores.
 - `worketers.css`: componentes comunes, estados, espaciado y reglas para móvil.
@@ -68,7 +68,7 @@ La marca común es **Worketers**; el módulo actual es **Talento** y su función
 - `build.mjs`: genera las cinco entradas públicas, `App.html` para Apps Script y `Brand.js` para sus títulos y mensajes.
 - `worketers-demo.html`: ejemplos de Talento/Reclutamiento, Equipos/Inventario y Gestión/Operaciones.
 
-Para otro proyecto, cambia `product` y `function` en `brand.json`, conserva la marca Worketers y ejecuta `node build.mjs`. Los estilos también se pueden copiar solos a una página HTML con una etiqueta link. No edites a mano los archivos generados. Para sincronizar Apps Script se incluye `Brand.js` en `.claspignore`; no contiene datos de la hoja ni de usuarios.
+Para otro proyecto, cambia `product` y `function` en `brand.json`, conserva la marca Way Finder y ejecuta `node build.mjs`. Los estilos también se pueden copiar solos a una página HTML con una etiqueta link. No edites a mano los archivos generados. Para sincronizar Apps Script se incluye `Brand.js` en `.claspignore`; no contiene datos de la hoja ni de usuarios.
 
 ## Psicométricos integrados
 
@@ -77,3 +77,15 @@ La pestaña Psicométricos usa la misma sesión del equipo (reclutador, admin o 
 `Psico.js` contiene consultas, envío y reportes; usa `PSICO_SPREADSHEET_ID` en propiedades privadas del servidor. `PsicoConfigPrivate.js` es configuración local excluida del repositorio. Las columnas H:N de la hoja de evaluaciones contienen creación, vencimiento, actor, estado de correo, envío, idempotencia y vínculo a postulación. Las columnas originales se conservan.
 
 Comprobación adicional: `node test-psico.mjs`. Las invitaciones y consultas PDF se registran en la bitácora. La administración independiente de Evalúa está cerrada.
+
+## Gestión de registros · Way Finder
+
+El panel usa `panelResumen` y `gestion`: búsqueda, filtros y orden en el servidor, con páginas de 10, 25, 50 o 100 registros. Los filtros se conservan por vista al guardar y actualizar. Las fechas de registro se filtran en hora de Ciudad de México. La búsqueda ignora acentos y distingue los campos de cada vista.
+
+Candidatos y requisiciones tienen una columna `activo` al final de la hoja. `Lifecycle.js` amplía solamente los encabezados compatibles; las filas antiguas sin ese valor siguen activas. La actividad es independiente del estatus del proceso o de publicación. Una requisición inactiva no admite nuevas postulaciones públicas. Inactivar y reactivar conservan datos, CV, vínculos a evaluaciones y bitácora, registrando actor y valores anteriores y nuevos con control de versión.
+
+La bitácora completa se consulta por páginas sin el corte de 500 eventos. Equipo y accesos mantiene su restricción de superadmin; sus respuestas no incluyen contraseñas ni hashes. Psicométricos también carga una página por solicitud y conserva la vigencia de 24 horas.
+
+La hoja se sigue leyendo para filtrar: se limita la respuesta y el contenido mostrado, no se convierte Sheets en una base con índices. Para volúmenes que excedan las cuotas de Apps Script se requerirá migrar el almacenamiento.
+
+`management.js` y `management.css` se integran con `build.mjs`; el logo PNG transparente está en `way-finder-logo.png` y se incrusta en las entradas de Recruitment para funcionar también en Apps Script. Ejecuta `node build.mjs` y `node test-backend.mjs` (incluye pruebas de gestión, interfaz y psicométricos).
