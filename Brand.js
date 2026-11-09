@@ -1,6 +1,6 @@
 // Generado desde brand.json. Editar la configuración y ejecutar node build.mjs.
 const BRAND_ = {
-  "brand": "Worketers",
+  "brand": "Way Finder",
   "product": "Talento",
   "function": "Reclutamiento",
   "footer": "Personas, oportunidades y equipo.",

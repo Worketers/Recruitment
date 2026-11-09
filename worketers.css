@@ -1,4 +1,4 @@
-/* Worketers: estilos comunes de la aplicación. */
+/* Way Finder: estilos comunes de la aplicación. */
 :root{
 --ink:#152f35;
 --muted:#5c7478;
@@ -296,7 +296,7 @@ dd{
 padding-left:0}
 }
 
-/* Identidad Worketers. La aplicación cambia de nombre, la marca se conserva. */
+/* Identidad Way Finder. La aplicación cambia de nombre, la marca se conserva. */
 :root{
  --wk-primary:#0096a3;--wk-action:#007a84;--wk-ink:#173239;--wk-background:#f3f7f7;
  --wk-muted:#60747b;--wk-border:#dbe6e7;--wk-surface:#fff;--wk-soft:#e7f3f3;

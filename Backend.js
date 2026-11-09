@@ -1,10 +1,10 @@
-/* Worketers. Solo api y doGet/doPost son invocables por clientes. */
+/* Way Finder. Solo api y doGet/doPost son invocables por clientes. */
 const DB_ID_ = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
 const OWNER_ = PropertiesService.getScriptProperties().getProperty('OWNER_EMAIL');
 const REQ_FIELDS_ = ['nombreSolicitante','empresaCliente','telefonoContacto','celularContacto','emailContacto','nombrePosicion','numeroVacantes','tipoVacante','ubicacion','horarioLaboral','reportaA','edadMinMax','estadoCivil','genero','escolaridad','objetivoPuesto','experienciaRequerida','requisitosIndispensables','requisitosDeseables','conocimientosCualidades','habilidadesTecnologicas','idiomas','competenciasEvaluar','actividadesDesempenar','sueldoBruto','sueldoNeto','prestacionesLey','prestacionesSuperiores','compensacionesVariables','esquemaPago','frecuenciaPago','tipoContrato','periodoPrueba','requisitosAutoTransporte','observacionesExtras'];
 const SCHEMA_ = {
-  Requisiciones: ['idRequisicion','fecha','estatus'].concat(REQ_FIELDS_, ['actualizadoEn','actualizadoPor','version']),
-  Candidatos: ['idPostulacion','idRequisicion','fecha','nombreCandidato','telefono','correo','linkCV','estatusProceso','notasReclutador','puestoDeseado','nivelEstudios','cvFileId','consentimientoEn','actualizadoEn','actualizadoPor','version','solicitudId'],
+  Requisiciones: ['idRequisicion','fecha','estatus'].concat(REQ_FIELDS_, ['actualizadoEn','actualizadoPor','version','activo']),
+  Candidatos: ['idPostulacion','idRequisicion','fecha','nombreCandidato','telefono','correo','linkCV','estatusProceso','notasReclutador','puestoDeseado','nivelEstudios','cvFileId','consentimientoEn','actualizadoEn','actualizadoPor','version','solicitudId','activo'],
   Usuarios: ['correo','nombre','rol','activo','creadoEn','actualizadoEn','version','usuario','passwordHash','cambiarPassword'],
   Bitacora: ['id','fecha','actor','accion','entidad','registroId','antes','despues'],
   Sesiones: ['hash','correo','expiraEn','creadaEn','soloPassword'],
@@ -69,6 +69,7 @@ function api(action, data, token) {
   try {
     if (PropertiesService.getScriptProperties().getProperty('INITIALIZED') !== '1') throw new Error('El portal está en preparación. Intenta más tarde.');
     credentialSchema_();
+    managementSchema_();
     data = data || {};
     if (action === 'vacantes') return ok_(publicJobs_());
     if (action === 'solicitarCodigo') return ok_(requestCode_(data));
@@ -81,6 +82,8 @@ function api(action, data, token) {
     if (action === 'miSesion') return ok_({perfil:profile_(user)});
     if (action === 'cambiarPassword') return ok_(locked_(function(){return changePassword_(authenticate_(token),data);}));
     if (profile_(user).cambiarPassword) throw new Error('Cambia tu contraseña para continuar.');
+    if(action==='gestion')return ok_(managementPage_(data,user));
+    if(action==='panelResumen')return ok_({perfil:profile_(user),resumen:managementSummary_(),candidatos:[],requisiciones:[]});
     if (['psicoPanel','psicoInvitar','psicoPDF'].indexOf(action)>=0) {
       if (['reclutador','admin','superadmin'].indexOf(user.rol)<0) throw new Error('Acceso no autorizado.');
       if(action==='psicoPanel') return ok_({candidatos:psicoList_()});
@@ -164,7 +167,7 @@ function verifyCode_(d){return locked_(function(){
 });}
 function authenticate_(token){if(typeof token!=='string'||token.length!==64)throw new Error('Inicia sesión para continuar.');const s=rows_('Sesiones').find(function(r){return r.hash===hash_(token)&&Date.parse(r.expiraEn)>Date.now();});if(!s)throw new Error('La sesión venció. Inicia sesión.');const u=rows_('Usuarios').find(function(r){return r.correo===s.correo&&active_(r);});if(!u)throw new Error('Acceso suspendido.');return Object.assign({},u,{_passwordOnly:s.soloPassword===true||s.soloPassword==='TRUE'});}
 function removeSession_(token){locked_(function(){const rows=rows_('Sesiones'),i=rows.findIndex(function(s){return s.hash===hash_(token);});if(i>=0)sheet_('Sesiones').deleteRow(i+2);});}
-function publicJobs_(){return rows_('Requisiciones').filter(function(r){return r.estatus==='Activa';}).map(function(r){return {idRequisicion:r.idRequisicion,nombrePosicion:r.nombrePosicion,ubicacion:r.ubicacion,objetivoPuesto:r.objetivoPuesto,experienciaRequerida:r.experienciaRequerida,requisitosIndispensables:r.requisitosIndispensables};});}
+function publicJobs_(){return rows_('Requisiciones').filter(function(r){return recordActive_(r)&&r.estatus==='Activa';}).map(function(r){return {idRequisicion:r.idRequisicion,nombrePosicion:r.nombrePosicion,ubicacion:r.ubicacion,objetivoPuesto:r.objetivoPuesto,experienciaRequerida:r.experienciaRequerida,requisitosIndispensables:r.requisitosIndispensables};});}
 function submission_(d,type){const id=required_(d.solicitudId,'identificador de envío',80);if(!/^[a-zA-Z0-9-]{16,80}$/.test(id))throw new Error('Identificador inválido.');const old=rows_('Solicitudes').find(function(r){return r.solicitudId===id;});if(old&&old.tipo!==type)throw new Error('Identificador ya utilizado.');return old;}
 function createReq_(d){
   const previous=submission_(d,'requisicion');if(previous)return {id:previous.registroId};
@@ -215,9 +218,10 @@ function updateCandidate_(u,d){
   const old=rows_('Candidatos').find(function(r){return r.idPostulacion===d.id;});if(!old)throw new Error('Candidato no encontrado.');version_(old,d);
   if(CAND_STATES_.indexOf(d.estatusProceso)<0)throw new Error('Estatus inválido.');
   const changes={estatusProceso:d.estatusProceso,notasReclutador:text_(d.notasReclutador,10000),actualizadoEn:now_(),actualizadoPor:u.correo,version:Number(old.version)+1};
-  patch_('Candidatos','idPostulacion',d.id,changes);audit_(u.correo,'actualizar','Candidatos',d.id,{estatusProceso:old.estatusProceso,notasReclutador:old.notasReclutador},changes);return {};
+  if(d.activo!==undefined&&typeof d.activo!=='boolean')throw Error('Actividad inválida.');changes.activo=d.activo===undefined?recordActive_(old):d.activo;
+  patch_('Candidatos','idPostulacion',d.id,changes);audit_(u.correo,recordActive_(old)!==changes.activo?(changes.activo?'reactivar':'inactivar'):'actualizar','Candidatos',d.id,{activo:recordActive_(old),estatusProceso:old.estatusProceso,notasReclutador:old.notasReclutador},changes);return {};
 }
-function updateReq_(u,d){const old=rows_('Requisiciones').find(function(r){return r.idRequisicion===d.id;});if(!old)throw new Error('Requisición no encontrada.');version_(old,d);if(REQ_STATES_.indexOf(d.estatus)<0)throw new Error('Estatus inválido.');const changes={estatus:d.estatus,actualizadoEn:now_(),actualizadoPor:u.correo,version:Number(old.version)+1};patch_('Requisiciones','idRequisicion',d.id,changes);audit_(u.correo,'actualizar','Requisiciones',d.id,{estatus:old.estatus},changes);return {};}
+function updateReq_(u,d){const old=rows_('Requisiciones').find(function(r){return r.idRequisicion===d.id;});if(!old)throw new Error('Requisición no encontrada.');version_(old,d);if(REQ_STATES_.indexOf(d.estatus)<0)throw new Error('Estatus inválido.');if(d.activo!==undefined&&typeof d.activo!=='boolean')throw Error('Actividad inválida.');const changes={estatus:d.estatus,activo:d.activo===undefined?recordActive_(old):d.activo,actualizadoEn:now_(),actualizadoPor:u.correo,version:Number(old.version)+1};patch_('Requisiciones','idRequisicion',d.id,changes);audit_(u.correo,recordActive_(old)!==changes.activo?(changes.activo?'reactivar':'inactivar'):'actualizar','Requisiciones',d.id,{estatus:old.estatus,activo:recordActive_(old)},changes);return {};}
 function saveUser_(u,d){
   if(u.rol!=='superadmin')throw new Error('Solo superadmin.');
   const email=email_(d.correo),old=rows_('Usuarios').find(function(r){return r.correo===email;});

@@ -6,6 +6,9 @@ for(const key of ['brand','product','function'])if(typeof brand[key]!=='string'|
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const colors=['primary','action','ink','background'].map(k=>{const v=brand.colors[k];if(!/^#[0-9a-f]{6}$/i.test(v))throw new Error(`Color no válido: ${k}`);return `--wk-${k}: ${v};`;}).join('');
 const tokens={PSICO_JS:read('./psicometricos.js'),BRAND:escape(brand.brand),PRODUCT:escape(brand.product),FUNCTION:escape(brand.function),TITLE:escape(`${brand.brand} · ${brand.product}`),FOOTER:escape(brand.footer),THEME_CSS:read('./worketers.css')+'\n'+read('./psicometricos.css')+`\n:root{${colors}}\n`};
+tokens.MANAGEMENT_JS=read('./management.js');
+tokens.THEME_CSS+='\n'+read('./management.css');
+tokens.LOGO=readFileSync(new URL('./way-finder-logo.png',import.meta.url)).toString('base64');
 let source=read('./App.template.html');
 for(const [key,value] of Object.entries(tokens))source=source.split(`{{${key}}}`).join(value);
 if(/\{\{[A-Z_]+\}\}/.test(source))throw new Error('Hay una etiqueta de marca sin resolver.');
